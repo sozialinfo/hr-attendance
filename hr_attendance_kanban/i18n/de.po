@@ -1,0 +1,147 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_attendance_kanban
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e-20231222\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-31 15:34+0000\n"
+"PO-Revision-Date: 2023-12-31 16:51+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__absent
+msgid "Absent"
+msgstr "Abwesend"
+
+#. module: hr_attendance_kanban
+#: model:ir.model,name:hr_attendance_kanban.model_hr_attendance
+msgid "Attendance"
+msgstr "Anwesenheit"
+
+#. module: hr_attendance_kanban
+#: model:ir.model,name:hr_attendance_kanban.model_hr_attendance_type
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance__attendance_type_id
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee__attendance_type_id
+msgid "Attendance Type"
+msgstr "Anwesenheitsart"
+
+#. module: hr_attendance_kanban
+#: model:ir.actions.act_window,name:hr_attendance_kanban.hr_attendance_type_action
+msgid "Attendance Types"
+msgstr "Anwesenheitsarten"
+
+#. module: hr_attendance_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_checkinout_view_form
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: hr_attendance_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_checkinout_view_form
+msgid "Check-in / Check-out"
+msgstr "Check-in / Check-out"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance__comment
+msgid "Comment"
+msgstr "Kommentar"
+
+#. module: hr_attendance_kanban
+#: model:ir.ui.menu,name:hr_attendance_kanban.hr_attendance_settings_redefinition_menu
+msgid "Configuration"
+msgstr "Konfiuguration"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: hr_attendance_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_type_view_form
+msgid "Define attendance type"
+msgstr ""
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_type__absent
+msgid ""
+"Defines that the Attendance Type represents the employee being absent. Only "
+"one Attendance Type can represent 'absent' and exactly one Attendance Type "
+"needs to be defined as 'absent'"
+msgstr ""
+"Definiert die Anwesenheitsart als \"abwesend. Es kann nur eine "
+"Anwesenheitsart \"abwesend\" darstellen und genau eine Anwesenheitsart muss "
+"als \"abwesend\" definiert werden."
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: hr_attendance_kanban
+#: model:ir.model,name:hr_attendance_kanban.model_hr_employee
+msgid "Employee"
+msgstr "Mitarbeiter"
+
+#. module: hr_attendance_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_employee_kanban
+msgid "Employee's Name"
+msgstr "Name des Mitarbeiters"
+
+#. module: hr_attendance_kanban
+#: model:ir.actions.act_window,name:hr_attendance_kanban.action_hr_employee_kanban
+#: model:ir.ui.menu,name:hr_attendance_kanban.menu_hr_employee_kanban
+msgid "Employees Kanban"
+msgstr "Mitarbeiter-Kanban"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type____last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt geändert von"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt geändert am"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_type__name
+msgid "Represents a lane in the Attendance Kanban Board"
+msgstr "Repräsentiert eine Spalte im Mitarbeiter-Kanban"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__sequence
+msgid "Sequence"
+msgstr "Reihenfolge"
+
+#. module: hr_attendance_kanban
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__name
+msgid "Type"
+msgstr "Abwesenheitsart"
+
+#. module: hr_attendance_kanban
+#: model:ir.ui.menu,name:hr_attendance_kanban.hr_attendance_type_menu
+msgid "Types"
+msgstr "Abwesenheitsarten"
