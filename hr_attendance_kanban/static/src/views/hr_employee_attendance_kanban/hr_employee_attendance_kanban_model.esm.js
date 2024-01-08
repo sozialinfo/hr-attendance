@@ -86,13 +86,9 @@ export class HrEmployeeAttendanceKanbanDynamicGroupList extends HrEmployeeAttend
             const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
             // Quick update: moves the record at the right position and notifies components
             targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
-            const value = isRelational(this.groupByField)
+            const targetValue = isRelational(this.groupByField)
                 ? [targetGroup.value, targetGroup.displayName]
                 : targetGroup.value;
-
-            const currentAttendanceType = record.data.attendance_type_id
-                ? record.data.attendance_type_id[0]
-                : false;
 
             const abort = () => {
                 this.model.transaction.abort(dataRecordId);
@@ -104,19 +100,12 @@ export class HrEmployeeAttendanceKanbanDynamicGroupList extends HrEmployeeAttend
                     this.model.ormService,
                     this.model.actionService,
                     record.resId,
-                    value
+                    targetValue[0],
+                    false
                 );
 
-                const newAttendanceType = await this.model.ormService.call(
-                    "hr.employee",
-                    "get_attendance_type_id",
-                    [[record.resId]]
-                );
-
-                if (
-                    (closed && closed.special) ||
-                    newAttendanceType === currentAttendanceType
-                ) {
+                // Abort attendance change if wizard is canceled or exits without save
+                if (!closed || closed.special) {
                     abort();
                     this.model.notify();
                     return;

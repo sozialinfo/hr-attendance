@@ -58,6 +58,8 @@ class HrAttendanceKanbanWizard(models.Model):
     @api.depends("last_attendance_id.check_out")
     @api.depends("last_attendance_id")
     def _compute_comment(self):
+        """Computes the default comment for check in/out wizard. When already checked in
+        get the current attendance comment, otherwise comment should be empty."""
         for wizard in self:
             if (
                 wizard.employee_id
@@ -69,19 +71,30 @@ class HrAttendanceKanbanWizard(models.Model):
                 wizard.comment = False
 
     def action_change(self):
-        """Action called by wizard to change check in/out status and attendance type."""
+        """Action called by wizard to change check in/out status, attendance type,
+        and comment."""
         self.ensure_one()
 
+        employee_id = self.employee_id.sudo()
+        # Check in by creating a new attendance record
         if self.attendance_state != "checked_in":
             if not self.next_attendance_type_id or self.next_attendance_type_id.absent:
                 raise UserError(
                     _(
-                        "Cannot perform check out on %(empl_name)s, employee is already"
+                        "Cannot perform check out on {empl_name}, employee is already"
                         " checked out."
-                    )
+                    ).format(empl_name=employee_id.name)
+                )
+            last_attendance_id = employee_id.last_attendance_id
+            if last_attendance_id and self.start_time <= last_attendance_id.check_in:
+                raise UserError(
+                    _(
+                        "Unable to check in {empl_name} earlier than their previous"
+                        " attendance started."
+                    ).format(empl_name=employee_id.name)
                 )
             vals = {
-                "employee_id": self.employee_id.id,
+                "employee_id": employee_id.id,
                 "check_in": self.start_time,
                 "comment": self.comment,
                 "attendance_type_id": (
@@ -90,10 +103,18 @@ class HrAttendanceKanbanWizard(models.Model):
                     else False
                 ),
             }
-            return self.env["hr.attendance"].create(vals)
+            attendance = self.env["hr.attendance"].create(vals)
+            return {
+                "type": "ir.actions.act_window_close",
+                "infos": {
+                    "attendanceId": attendance.id,
+                    "employeeId": employee_id.id,
+                },
+            }
 
+        # Check out by checking out the current checked in attendance record
         attendance = self.env["hr.attendance"].search(
-            [("employee_id", "=", self.employee_id.id), ("check_out", "=", False)],
+            [("employee_id", "=", employee_id.id), ("check_out", "=", False)],
             limit=1,
         )
         if attendance:
@@ -101,12 +122,12 @@ class HrAttendanceKanbanWizard(models.Model):
         else:
             raise UserError(
                 _(
-                    "Cannot perform check out on %(empl_name)s, could not find"
+                    "Cannot perform check out on {empl_name}, could not find"
                     " corresponding check in. Your attendances have probably been"
                     " modified manually by human resources."
-                )
-                % {
-                    "empl_name": self.employee_id.sudo().name,
-                }
+                ).format(empl_name=employee_id.name)
             )
-        return attendance
+        return {
+            "type": "ir.actions.act_window_close",
+            "infos": {"attendanceId": attendance.id, "employeeId": employee_id.id},
+        }

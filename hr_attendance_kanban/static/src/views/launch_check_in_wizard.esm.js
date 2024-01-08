@@ -4,19 +4,24 @@ import {useService} from "@web/core/utils/hooks";
 
 const {useComponent} = owl;
 
-export async function launchCheckInWizard(orm, actionService, recordId, value) {
+export async function launchCheckInWizard(
+    orm,
+    actionService,
+    employeeId = false,
+    nextAttendanceTypeId = false,
+    manualMode = false
+) {
     const action = await orm.call(
         "hr.employee",
         "action_check_in_out_wizard",
-        [false],
+        [manualMode],
         {
             context: {
-                default_employee_id: recordId,
-                default_next_attendance_type_id: value[0],
+                default_employee_id: employeeId,
+                default_next_attendance_type_id: nextAttendanceTypeId,
             },
         }
     );
-
     return new Promise((resolve) => {
         actionService.doAction(action, {
             onClose: resolve,
