@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import {KanbanController} from "@web/views/kanban/kanban_controller";
+import {launchCheckInWizard} from "@hr_attendance_kanban/views/launch_check_in_wizard.esm";
 
 import {session} from "@web/session";
 import {useService} from "@web/core/utils/hooks";
@@ -13,24 +14,27 @@ export class HrEmployeeAttendanceKanbanController extends KanbanController {
     }
 
     async checkInOutButtonClicked() {
+        // Attempt to get current users employee record
         const employees = await this.orm.searchRead(
             "hr.employee",
             [["user_id", "=", session.uid]],
             ["id"],
             {limit: 1}
         );
-        const action = await this.orm.call(
-            "hr.employee",
-            "action_check_in_out_wizard",
-            [],
-            {
-                context: {
-                    default_employee_id: employees.length > 0 ? employees[0].id : false,
-                },
-            }
+
+        const closed = await launchCheckInWizard(
+            this.model.ormService,
+            this.model.actionService,
+            employees.length > 0 ? employees[0].id : false,
+            false,
+            true
         );
-        await this.action.doAction(action, {
-            onClose: () => window.location.reload(),
-        });
+
+        // Abort attendance change if wizard is canceled or exits without save
+        if (!closed || closed.special) {
+            return;
+        }
+        // Reload model to display attendance change
+        this.model.load();
     }
 }
