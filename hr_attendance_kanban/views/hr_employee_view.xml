@@ -7,7 +7,7 @@
         <field name="priority">500</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_email']" position="after">
-                <field name="attendance_type_id" />
+                <field name="attendance_type_id" readonly="1" />
             </xpath>
         </field>
     </record>
@@ -19,7 +19,7 @@
         <field name="priority">500</field>
         <field name="arch" type="xml">
             <field name="work_email" position="after">
-                <field name="attendance_type_id" optional="show" />
+                <field name="attendance_type_id" readonly="1" optional="show" />
             </field>
         </field>
     </record>

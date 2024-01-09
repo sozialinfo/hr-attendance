@@ -15,8 +15,8 @@ export class HrEmployeeAttendanceKanbanController extends KanbanController {
 
     async checkInOutButtonClicked() {
         // Attempt to get current users employee record
-        const employees = await this.orm.searchRead(
-            "hr.employee",
+        const publicEmployee = await this.orm.searchRead(
+            "hr.employee.public",
             [["user_id", "=", session.uid]],
             ["id"],
             {limit: 1}
@@ -25,7 +25,7 @@ export class HrEmployeeAttendanceKanbanController extends KanbanController {
         const closed = await launchCheckInWizard(
             this.model.ormService,
             this.model.actionService,
-            employees.length > 0 ? employees[0].id : false,
+            publicEmployee.length > 0 ? publicEmployee[0].id : false,
             false,
             true
         );

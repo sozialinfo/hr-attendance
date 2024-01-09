@@ -2,7 +2,7 @@
 <odoo>
     <record id="view_hr_attendance_employee_kanban" model="ir.ui.view">
         <field name="name">hr.attendance.employee.kanban</field>
-        <field name="model">hr.employee</field>
+        <field name="model">hr.employee.public</field>
         <field name="arch" type="xml">
             <kanban
                 class="o_kanban_mobile"
@@ -66,7 +66,7 @@
 
     <record id="action_hr_attendance_employee_kanban" model="ir.actions.act_window">
         <field name="name">Employees Kanban</field>
-        <field name="res_model">hr.employee</field>
+        <field name="res_model">hr.employee.public</field>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="view_hr_attendance_employee_kanban" />
     </record>
@@ -76,7 +76,7 @@
         name="Employees Kanban"
         parent="hr_attendance.menu_hr_attendance_root"
         sequence="0"
-        groups="hr_attendance.group_hr_attendance_user"
+        groups="hr_attendance.group_hr_attendance"
         action="action_hr_attendance_employee_kanban"
     />
 </odoo>

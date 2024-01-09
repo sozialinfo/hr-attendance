@@ -10,7 +10,7 @@
                         <field name="manual_mode" invisible="1" />
                         <field name="attendance_state" invisible="1" />
                         <field
-                            name="employee_id"
+                            name="public_employee_id"
                             widget="many2one_avatar"
                             attrs="{'readonly': [('manual_mode', '!=', True)]}"
                         />
