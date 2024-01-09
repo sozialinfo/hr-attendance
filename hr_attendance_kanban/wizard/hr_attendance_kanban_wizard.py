@@ -85,8 +85,12 @@ class HrAttendanceKanbanWizard(models.Model):
                         " checked out."
                     ).format(empl_name=employee_id.name)
                 )
-            last_attendance_id = employee_id.last_attendance_id
-            if last_attendance_id and self.start_time <= last_attendance_id.check_in:
+            # Need to ensure new attendance does not start earlier or at the same time
+            # as previous attendance to prevent hr.attendance record order being incorrect
+            if (
+                self.last_attendance_id
+                and self.start_time <= self.last_attendance_id.check_in
+            ):
                 raise UserError(
                     _(
                         "Unable to check in {empl_name} earlier than their previous"
