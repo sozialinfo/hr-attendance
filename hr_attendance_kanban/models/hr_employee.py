@@ -13,14 +13,15 @@ class HrEmployee(models.Model):
         string="Attendance Type",
         group_expand="_read_attendance_type_ids",
         compute="_compute_attendance_type_id",
+        inverse="_inverse_attendance_type_id",
         store=True,
         readonly=False,
-        groups="hr_attendance.group_hr_attendance",
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user",  # noqa:B950
     )
     last_attendance_comment = fields.Char(
         related="last_attendance_id.comment",
         store=True,
-        groups="hr_attendance.group_hr_attendance",
+        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
     )
 
     @api.depends(
@@ -41,6 +42,36 @@ class HrEmployee(models.Model):
                 if att and not att.check_out
                 else absent_att_type
             )
+
+    def _inverse_attendance_type_id(self):
+        for employee in self:
+            if (
+                employee.attendance_type_id
+                and not employee.attendance_type_id.absent
+                and employee.attendance_state == "checked_in"
+            ):
+                employee.last_attendance_id.attendance_type_id = (
+                    employee.attendance_type_id
+                )
+
+    def is_launch_check_in_wizard(self, next_attendance_type_id):
+        """Checks if Check In / Out wizard needs to be launched for updating records
+        attendance type. If changing attendance type without checking out we don't need
+        to launch wizard."""
+        self.ensure_one()
+        next_attendance_type = (
+            self.env["hr.attendance.type"].browse([next_attendance_type_id])
+            if next_attendance_type_id
+            else False
+        )
+        if (
+            self.attendance_state == "checked_in"
+            and next_attendance_type
+            and not next_attendance_type.absent
+            and self.attendance_type_id != next_attendance_type
+        ):
+            return False
+        return True
 
     @api.model
     def action_check_in_out_wizard(self, manual_mode=True):

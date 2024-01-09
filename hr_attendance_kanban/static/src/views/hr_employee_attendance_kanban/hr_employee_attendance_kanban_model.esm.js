@@ -55,6 +55,42 @@ export class HrEmployeeAttendanceKanbanModel extends KanbanModel {
 }
 
 export class HrEmployeeAttendanceKanbanDynamicGroupList extends HrEmployeeAttendanceKanbanModel.DynamicGroupList {
+    async handleAttendanceChange(record, targetValue) {
+        // Check if we need to launch check in/out wizard depending on employee's
+        // current attendance state and target attendance type
+        const isLaunchCheckIn = await this.model.ormService.call(
+            "hr.employee",
+            "is_launch_check_in_wizard",
+            [record.resId, targetValue[0]]
+        );
+
+        // Launch wizard and wait for a callback
+        if (isLaunchCheckIn) {
+            const closed = await launchCheckInWizard(
+                this.model.ormService,
+                this.model.actionService,
+                record.resId,
+                targetValue[0],
+                false
+            );
+
+            // Abort attendance change if wizard is canceled or exits without save
+            if (!closed || closed.special) {
+                return false;
+            }
+            // If no need to launch wizard, save the target attendance type value
+        } else {
+            await record.update(
+                {[this.groupByField.name]: targetValue},
+                {silent: true}
+            );
+            const saved = await record.save({noReload: true});
+            if (!saved) {
+                return false;
+            }
+        }
+        return true;
+    }
     /**
      * @override
      *
@@ -68,6 +104,13 @@ export class HrEmployeeAttendanceKanbanDynamicGroupList extends HrEmployeeAttend
         // Groups have been re-rendered, old ids are ignored
         if (!sourceGroup || !targetGroup) {
             return;
+        }
+        // Return super if not targeting hr.attendance.type group in kanban
+        if (
+            sourceGroup.resModel !== "hr.attendance.type" ||
+            targetGroup.resModel !== "hr.attendance.type"
+        ) {
+            super.moveRecord(...arguments);
         }
 
         const record = sourceGroup.list.records.find((r) => r.id === dataRecordId);
@@ -96,16 +139,12 @@ export class HrEmployeeAttendanceKanbanDynamicGroupList extends HrEmployeeAttend
             };
 
             try {
-                const closed = await launchCheckInWizard(
-                    this.model.ormService,
-                    this.model.actionService,
-                    record.resId,
-                    targetValue[0],
-                    false
+                const attendanceChanged = await this.handleAttendanceChange(
+                    record,
+                    targetValue,
+                    abort
                 );
-
-                // Abort attendance change if wizard is canceled or exits without save
-                if (!closed || closed.special) {
+                if (!attendanceChanged) {
                     abort();
                     this.model.notify();
                     return;
