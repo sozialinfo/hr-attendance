@@ -59,8 +59,8 @@ export class HrEmployeeAttendanceKanbanDynamicGroupList extends HrEmployeeAttend
         // Check if we need to launch check in/out wizard depending on employee's
         // current attendance state and target attendance type
         const isLaunchCheckIn = await this.model.ormService.call(
-            "hr.employee",
-            "is_launch_check_in_wizard",
+            "hr.employee.public",
+            "action_update_attendance_type",
             [record.resId, targetValue[0]]
         );
 
@@ -76,16 +76,6 @@ export class HrEmployeeAttendanceKanbanDynamicGroupList extends HrEmployeeAttend
 
             // Abort attendance change if wizard is canceled or exits without save
             if (!closed || closed.special) {
-                return false;
-            }
-            // If no need to launch wizard, save the target attendance type value
-        } else {
-            await record.update(
-                {[this.groupByField.name]: targetValue},
-                {silent: true}
-            );
-            const saved = await record.save({noReload: true});
-            if (!saved) {
                 return false;
             }
         }

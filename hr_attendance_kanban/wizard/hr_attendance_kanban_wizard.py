@@ -11,9 +11,13 @@ class HrAttendanceKanbanWizard(models.Model):
     _name = "hr.attendance.kanban.wizard"
     _description = "Hr Attendance Kanban Wizard"
 
-    employee_id = fields.Many2one("hr.employee", string="Employee", required=True)
-    last_attendance_id = fields.Many2one(related="employee_id.last_attendance_id")
-    attendance_state = fields.Selection(related="employee_id.attendance_state")
+    public_employee_id = fields.Many2one(
+        "hr.employee.public", string="Employee", required=True
+    )
+    last_attendance_id = fields.Many2one(
+        related="public_employee_id.last_attendance_id"
+    )
+    attendance_state = fields.Selection(related="public_employee_id.attendance_state")
 
     next_attendance_type_id = fields.Many2one("hr.attendance.type", "Attendance Type")
     comment = fields.Char(help="Optional comment for attendance")
@@ -45,7 +49,7 @@ class HrAttendanceKanbanWizard(models.Model):
             )
 
             if (
-                wizard.employee_id
+                wizard.public_employee_id
                 and wizard.last_attendance_id
                 and not wizard.last_attendance_id.check_out
             ):
@@ -62,7 +66,7 @@ class HrAttendanceKanbanWizard(models.Model):
         get the current attendance comment, otherwise comment should be empty."""
         for wizard in self:
             if (
-                wizard.employee_id
+                wizard.public_employee_id
                 and wizard.last_attendance_id
                 and not wizard.last_attendance_id.check_out
             ):
@@ -75,7 +79,7 @@ class HrAttendanceKanbanWizard(models.Model):
         and comment."""
         self.ensure_one()
 
-        employee_id = self.employee_id.sudo()
+        public_employee_id = self.public_employee_id.sudo()
         # Check in by creating a new attendance record
         if self.attendance_state != "checked_in":
             if not self.next_attendance_type_id or self.next_attendance_type_id.absent:
@@ -83,7 +87,7 @@ class HrAttendanceKanbanWizard(models.Model):
                     _(
                         "Cannot perform check out on {empl_name}, employee is already"
                         " checked out."
-                    ).format(empl_name=employee_id.name)
+                    ).format(empl_name=public_employee_id.name)
                 )
             # Need to ensure new attendance does not start earlier or at the same time
             # as previous attendance to prevent hr.attendance record order being incorrect
@@ -95,10 +99,10 @@ class HrAttendanceKanbanWizard(models.Model):
                     _(
                         "Unable to check in {empl_name} earlier than their previous"
                         " attendance started."
-                    ).format(empl_name=employee_id.name)
+                    ).format(empl_name=public_employee_id.name)
                 )
             vals = {
-                "employee_id": employee_id.id,
+                "employee_id": public_employee_id.employee_id.id,
                 "check_in": self.start_time,
                 "comment": self.comment,
                 "attendance_type_id": (
@@ -112,13 +116,16 @@ class HrAttendanceKanbanWizard(models.Model):
                 "type": "ir.actions.act_window_close",
                 "infos": {
                     "attendanceId": attendance.id,
-                    "employeeId": employee_id.id,
+                    "employeeId": public_employee_id.id,
                 },
             }
 
         # Check out by checking out the current checked in attendance record
         attendance = self.env["hr.attendance"].search(
-            [("employee_id", "=", employee_id.id), ("check_out", "=", False)],
+            [
+                ("employee_id", "=", public_employee_id.employee_id.id),
+                ("check_out", "=", False),
+            ],
             limit=1,
         )
         if attendance:
@@ -129,9 +136,12 @@ class HrAttendanceKanbanWizard(models.Model):
                     "Cannot perform check out on {empl_name}, could not find"
                     " corresponding check in. Your attendances have probably been"
                     " modified manually by human resources."
-                ).format(empl_name=employee_id.name)
+                ).format(empl_name=public_employee_id.name)
             )
         return {
             "type": "ir.actions.act_window_close",
-            "infos": {"attendanceId": attendance.id, "employeeId": employee_id.id},
+            "infos": {
+                "attendanceId": attendance.id,
+                "employeeId": public_employee_id.id,
+            },
         }

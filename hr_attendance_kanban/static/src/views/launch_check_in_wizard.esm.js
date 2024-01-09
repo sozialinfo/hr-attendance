@@ -7,17 +7,17 @@ const {useComponent} = owl;
 export async function launchCheckInWizard(
     orm,
     actionService,
-    employeeId = false,
+    publicEmployeeId = false,
     nextAttendanceTypeId = false,
     manualMode = false
 ) {
     const action = await orm.call(
-        "hr.employee",
+        "hr.employee.public",
         "action_check_in_out_wizard",
         [manualMode],
         {
             context: {
-                default_employee_id: employeeId,
+                default_public_employee_id: publicEmployeeId,
                 default_next_attendance_type_id: nextAttendanceTypeId,
             },
         }

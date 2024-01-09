@@ -1,8 +1,7 @@
 # Copyright 2023 Verein sozialinfo.ch
 # License LGPL-3 - See http://www.gnu.org/licenses/lgpl-3.0.html
 
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -54,88 +53,7 @@ class HrEmployee(models.Model):
                     employee.attendance_type_id
                 )
 
-    def is_launch_check_in_wizard(self, next_attendance_type_id):
-        """Checks if Check In / Out wizard needs to be launched for updating records
-        attendance type. If changing attendance type without checking out we don't need
-        to launch wizard."""
-        self.ensure_one()
-        next_attendance_type = (
-            self.env["hr.attendance.type"].browse([next_attendance_type_id])
-            if next_attendance_type_id
-            else False
-        )
-        if (
-            self.attendance_state == "checked_in"
-            and next_attendance_type
-            and not next_attendance_type.absent
-            and self.attendance_type_id != next_attendance_type
-        ):
-            return False
-        return True
-
-    @api.model
-    def action_check_in_out_wizard(self, manual_mode=True):
-        """Action to open check in / check out wizard"""
-        ctx = dict(self.env.context)
-        wizard_action = self.env["ir.actions.act_window"]._for_xml_id(
-            "hr_attendance_kanban.hr_attendance_kanban_wizard_action"
-        )
-
-        if manual_mode:
-            ctx.update({"default_manual_mode": True})
-        else:
-            employee_id = ctx.get("default_employee_id")
-            employee = (
-                self.env["hr.employee"].browse([employee_id]) if employee_id else False
-            )
-            next_attendance_type_id = ctx.get("default_next_attendance_type_id")
-            next_attendance_type = (
-                self.env["hr.attendance.type"].browse([next_attendance_type_id])
-                if next_attendance_type_id
-                else False
-            )
-
-            if not employee:
-                raise UserError(
-                    _("A valid employee must be selected to check in / out.")
-                )
-            if not next_attendance_type:
-                raise UserError(_("Employee must be moved to a valid attendance type."))
-
-            if (
-                employee.attendance_state != "checked_out"
-                and not next_attendance_type.absent
-            ):
-                raise UserError(
-                    _(
-                        "Employee is already checked in, employee must be moved to an"
-                        " absent attendance type to check out."
-                    )
-                )
-
-            if (
-                employee.attendance_state != "checked_in"
-                and next_attendance_type.absent
-            ):
-                raise UserError(
-                    _(
-                        "Employee is already checked out, employee must be moved to a"
-                        " non-absent attendance type to check in."
-                    )
-                )
-
-        wizard_action.update(
-            {
-                "context": ctx,
-            }
-        )
-        return wizard_action
-
     @api.model
     def _read_attendance_type_ids(self, stages, domain, order):
         attendance_type_ids = self.env["hr.attendance.type"].search([])
         return attendance_type_ids
-
-    def get_attendance_type_id(self):
-        self.ensure_one()
-        return self.attendance_type_id.id
