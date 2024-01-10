@@ -43,6 +43,7 @@ class HrEmployee(models.Model):
             )
 
     def _inverse_attendance_type_id(self):
+        """Sets the attendance type of the current attendance if checked in."""
         for employee in self:
             if (
                 employee.attendance_type_id

@@ -7,11 +7,9 @@
         <field name="priority">500</field>
         <field name="arch" type="xml">
             <sheet position="inside">
-                <group name="type">
-                    <group>
-                        <field name="attendance_type_id" />
-                        <field name="comment" />
-                    </group>
+                <group name="attendance_type">
+                    <field name="attendance_type_id" />
+                    <field name="comment" />
                 </group>
             </sheet>
         </field>

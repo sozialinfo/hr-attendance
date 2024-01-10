@@ -13,6 +13,14 @@
                             name="public_employee_id"
                             widget="many2one_avatar"
                             attrs="{'readonly': [('manual_mode', '!=', True)]}"
+                            groups="hr_attendance.group_hr_attendance_user"
+                        />
+                        <field
+                            name="public_employee_id"
+                            widget="many2one_avatar"
+                            groups="!hr_attendance.group_hr_attendance_user"
+                            domain="[('user_id','=',uid)]"
+                            invisible="1"
                         />
                         <field
                             name="next_attendance_type_id"

@@ -19,7 +19,7 @@
         <field name="priority">500</field>
         <field name="arch" type="xml">
             <field name="work_email" position="after">
-                <field name="attendance_type_id" readonly="1" optional="show" />
+                <field name="attendance_type_id" readonly="1" optional="hide" />
             </field>
         </field>
     </record>
