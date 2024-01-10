@@ -16,7 +16,7 @@
         <field name="sequence">3</field>
     </record>
     <record id="hr_attendance_type_travelling" model="hr.attendance.type">
-        <field name="name">🚋 Traveling</field>
+        <field name="name">🚋 Travelling</field>
         <field name="absent">False</field>
         <field name="sequence">4</field>
     </record>

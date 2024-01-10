@@ -7,3 +7,4 @@ such as:
 * 🏢 Office
 * 🏠 Home-Office
 * 🚋 Travelling
+

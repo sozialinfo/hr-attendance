@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Attendance Type">
                 <sheet>
-                    <group col="4">
+                    <group>
                         <field name="name" />
                         <field name="absent" />
                         <field name="fold" />
@@ -47,7 +47,7 @@
     />
     <menuitem
         id="hr_attendance_type_menu"
-        name="Types"
+        name="Attendance Types"
         parent="hr_attendance.menu_hr_attendance_settings"
         action="hr_attendance_type_action"
         sequence="110"

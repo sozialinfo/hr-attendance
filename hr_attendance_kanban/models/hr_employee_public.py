@@ -2,7 +2,7 @@
 # License LGPL-3 - See http://www.gnu.org/licenses/lgpl-3.0.html
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 
 class HrEmployeePublic(models.Model):
@@ -20,17 +20,17 @@ class HrEmployeePublic(models.Model):
     last_attendance_comment = fields.Char(
         related="employee_id.last_attendance_comment",
         readonly=True,
-        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
     )
     last_check_in = fields.Datetime(
         related="employee_id.last_check_in",
         readonly=True,
-        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
     )
     last_check_out = fields.Datetime(
         related="employee_id.last_check_out",
         readonly=True,
-        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
     )
 
     @api.depends("employee_id.attendance_type_id")
@@ -49,6 +49,8 @@ class HrEmployeePublic(models.Model):
         :returns: True or False depending on if wizard needs to be launched
         """
         self.ensure_one()
+        self.check_attendance_access()
+
         next_attendance_type = (
             self.env["hr.attendance.type"].browse([next_attendance_type_id])
             if next_attendance_type_id
@@ -60,7 +62,11 @@ class HrEmployeePublic(models.Model):
             and not next_attendance_type.absent
             and self.attendance_type_id != next_attendance_type
         ):
-            self.employee_id.write({"attendance_type_id": next_attendance_type.id})
+            # Write as sudo since we already check to ensure attendance access and this
+            # enables regular employee users to modify their own attendance
+            self.employee_id.sudo().write(
+                {"attendance_type_id": next_attendance_type.id}
+            )
             return False
         return True
 
@@ -81,6 +87,8 @@ class HrEmployeePublic(models.Model):
                 if public_employee_id
                 else False
             )
+            public_employee.check_attendance_access()
+
             next_attendance_type_id = ctx.get("default_next_attendance_type_id")
             next_attendance_type = (
                 self.env["hr.attendance.type"].browse([next_attendance_type_id])
@@ -132,3 +140,13 @@ class HrEmployeePublic(models.Model):
     def get_attendance_type_id(self):
         self.ensure_one()
         return self.attendance_type_id.id
+
+    def check_attendance_access(self):
+        """Check if current user has access to modify employees attendances."""
+        self.ensure_one()
+        if self.env.user != self.user_id and not self.env.user.has_group(
+            "hr_attendance.group_hr_attendance_user"
+        ):
+            raise AccessError(
+                _("Only Officers can manage other employees attendances.")
+            )

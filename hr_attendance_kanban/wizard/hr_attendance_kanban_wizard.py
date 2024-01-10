@@ -78,8 +78,9 @@ class HrAttendanceKanbanWizard(models.Model):
         """Action called by wizard to change check in/out status, attendance type,
         and comment."""
         self.ensure_one()
+        public_employee_id = self.public_employee_id
+        public_employee_id.check_attendance_access()
 
-        public_employee_id = self.public_employee_id.sudo()
         # Check in by creating a new attendance record
         if self.attendance_state != "checked_in":
             if not self.next_attendance_type_id or self.next_attendance_type_id.absent:
