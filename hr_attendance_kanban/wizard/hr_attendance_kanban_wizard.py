@@ -20,7 +20,6 @@ class HrAttendanceKanbanWizard(models.Model):
     attendance_state = fields.Selection(related="public_employee_id.attendance_state")
 
     next_attendance_type_id = fields.Many2one("hr.attendance.type", "Attendance Type")
-    comment = fields.Char(help="Optional comment for attendance")
 
     manual_mode = fields.Boolean(
         help=(
@@ -29,34 +28,55 @@ class HrAttendanceKanbanWizard(models.Model):
         )
     )
 
-    start_time = fields.Datetime(compute="_compute_times", store=True, readonly=False)
-    end_time = fields.Datetime(compute="_compute_times", store=True, readonly=False)
+    start_time = fields.Datetime(
+        compute="_compute_start_time", store=True, readonly=False
+    )
+    end_time = fields.Datetime(compute="_compute_end_time", store=True, readonly=False)
     comment = fields.Char(compute="_compute_comment", store=True, readonly=False)
 
     @api.depends("last_attendance_id.check_in")
     @api.depends("last_attendance_id.check_out")
     @api.depends("last_attendance_id")
-    def _compute_times(self):
-        """Computes the default start and end times for check in/out wizard rounded
+    def _compute_start_time(self):
+        """Computes the default start time for check in/out wizard rounded
         down to the closest 5 minutes. If employee is checked in, get the checked in
         time for start time."""
-        for wizard in self:
-            time_now = fields.Datetime.now()
-            time_now_rounded = time_now - datetime.timedelta(
-                minutes=time_now.minute % 5,
-                seconds=time_now.second,
-                microseconds=time_now.microsecond,
-            )
+        time_now = fields.Datetime.now()
+        time_now_rounded = time_now - datetime.timedelta(
+            minutes=time_now.minute % 5,
+            seconds=time_now.second,
+            microseconds=time_now.microsecond,
+        )
 
+        for wizard in self:
             if (
                 wizard.public_employee_id
                 and wizard.last_attendance_id
                 and not wizard.last_attendance_id.check_out
             ):
                 wizard.start_time = wizard.last_attendance_id.check_in
-                wizard.end_time = time_now_rounded
             else:
                 wizard.start_time = time_now_rounded
+
+    @api.depends("last_attendance_id.check_in")
+    @api.depends("last_attendance_id.check_out")
+    @api.depends("last_attendance_id")
+    def _compute_end_time(self):
+        """Computes the end time for check in/out wizard rounded
+        down to the closest 5 minutes when checking out."""
+        time_now = fields.Datetime.now()
+        time_now_rounded = time_now - datetime.timedelta(
+            minutes=time_now.minute % 5,
+            seconds=time_now.second,
+            microseconds=time_now.microsecond,
+        )
+        for wizard in self:
+            if (
+                wizard.public_employee_id
+                and wizard.last_attendance_id
+                and not wizard.last_attendance_id.check_out
+            ):
+                wizard.end_time = time_now_rounded
 
     @api.depends("last_attendance_id.comment")
     @api.depends("last_attendance_id.check_out")
@@ -130,6 +150,10 @@ class HrAttendanceKanbanWizard(models.Model):
             limit=1,
         )
         if attendance:
+            if self.end_time < attendance.check_in:
+                raise UserError(
+                    _('"Check Out" time cannot be earlier than "Check In" time.')
+                )
             attendance.check_out = self.end_time
         else:
             raise UserError(
