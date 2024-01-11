@@ -7,15 +7,14 @@
         <field name="priority">500</field>
         <field name="arch" type="xml">
             <sheet position="inside">
-                <group name="type">
-                    <group>
-                        <field name="attendance_type_id" />
-                        <field name="comment" />
-                    </group>
+                <group name="attendance_type">
+                    <field name="attendance_type_id" />
+                    <field name="comment" />
                 </group>
             </sheet>
         </field>
     </record>
+
     <record id="hr_attendance_view_tree" model="ir.ui.view">
         <field name="name">hr.attendance.tree</field>
         <field name="model">hr.attendance</field>
@@ -26,25 +25,6 @@
                 <field name="attendance_type_id" />
                 <field name="comment" />
             </field>
-        </field>
-    </record>
-    <record id="hr_attendance_checkinout_view_form" model="ir.ui.view">
-        <field name="name">hr.attendance.checkinout.form</field>
-        <field name="model">hr.attendance</field>
-        <field name="arch" type="xml">
-            <form string="Check-in / Check-out">
-                <sheet>
-                    <group>
-                        <field name="employee_id" />
-                        <field name="check_in" />
-                        <field name="check_out" />
-                        <field name="attendance_type_id" />
-                    </group>
-                </sheet>
-                <footer>
-                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
-                </footer>
-            </form>
         </field>
     </record>
 </odoo>

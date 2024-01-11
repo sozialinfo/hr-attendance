@@ -4,16 +4,19 @@
         <field name="name">hr.attendance.type.form</field>
         <field name="model">hr.attendance.type</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Attendance Type">
                 <sheet>
-                    <group col="4">
+                    <group>
                         <field name="name" />
                         <field name="absent" />
+                        <field name="fold" />
+                        <field name="sequence" />
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
+
     <record id="hr_attendance_type_view_tree" model="ir.ui.view">
         <field name="name">hr.attendance.type.tree</field>
         <field name="model">hr.attendance.type</field>
@@ -25,6 +28,7 @@
             </tree>
         </field>
     </record>
+
     <record id="hr_attendance_type_action" model="ir.actions.act_window">
         <field name="name">Attendance Types</field>
         <field name="type">ir.actions.act_window</field>
@@ -32,6 +36,7 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="hr_attendance_type_view_tree" />
     </record>
+
     <menuitem
         id="hr_attendance_settings_redefinition_menu"
         name="Configuration"
@@ -42,7 +47,7 @@
     />
     <menuitem
         id="hr_attendance_type_menu"
-        name="Types"
+        name="Attendance Types"
         parent="hr_attendance.menu_hr_attendance_settings"
         action="hr_attendance_type_action"
         sequence="110"

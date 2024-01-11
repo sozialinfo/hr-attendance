@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="hr_attendance_kanban_wizard_form">
+        <field name="name">hr.attendance.kanban.wizard.form</field>
+        <field name="model">hr.attendance.kanban.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Check In / Check Out">
+                <group>
+                    <group colspan="4">
+                        <field name="manual_mode" invisible="1" />
+                        <field name="attendance_state" invisible="1" />
+                        <field
+                            name="public_employee_id"
+                            widget="many2one_avatar"
+                            attrs="{'readonly': [('manual_mode', '!=', True)]}"
+                            groups="hr_attendance.group_hr_attendance_user"
+                        />
+                        <field
+                            name="public_employee_id"
+                            widget="many2one_avatar"
+                            groups="!hr_attendance.group_hr_attendance_user"
+                            domain="[('user_id','=',uid)]"
+                            invisible="1"
+                        />
+                        <field
+                            name="next_attendance_type_id"
+                            attrs="{'required': [('manual_mode', '=', True), ('attendance_state', '!=', 'checked_in')] , 'readonly': ['|', ('manual_mode', '!=', True), ('attendance_state', '!=', 'checked_out')], 'invisible': ['|', ('manual_mode', '!=', True), ('attendance_state', '!=', 'checked_out')]}"
+                            domain="[('absent', '!=', True)]"
+                            options="{'no_create': True}"
+                        />
+                        <field
+                            name="start_time"
+                            attrs="{'required': [('attendance_state', '!=', 'checked_in')], 'readonly': [('attendance_state', '!=', 'checked_out')]}"
+                        />
+                        <field
+                            name="end_time"
+                            attrs="{'required': [('attendance_state', '!=', 'checked_out')], 'readonly': [('attendance_state', '!=', 'checked_in')]}"
+                        />
+                        <field
+                            name="comment"
+                            attrs="{'readonly': [('attendance_state', '!=', 'checked_out')]}"
+                        />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        attrs="{'invisible': [('attendance_state', '!=', 'checked_out')]}"
+                        string="Check In"
+                        name="action_change"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button
+                        attrs="{'invisible': [('attendance_state', '!=', 'checked_in')]}"
+                        string="Check Out"
+                        name="action_change"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_kanban_wizard_action" model="ir.actions.act_window">
+        <field name="name">Check In / Check Out</field>
+        <field name="res_model">hr.attendance.kanban.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
