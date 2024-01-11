@@ -25,6 +25,8 @@
                         <field
                             name="next_attendance_type_id"
                             attrs="{'required': [('manual_mode', '=', True), ('attendance_state', '!=', 'checked_in')] , 'readonly': ['|', ('manual_mode', '!=', True), ('attendance_state', '!=', 'checked_out')], 'invisible': ['|', ('manual_mode', '!=', True), ('attendance_state', '!=', 'checked_out')]}"
+                            domain="[('absent', '!=', True)]"
+                            options="{'no_create': True}"
                         />
                         <field
                             name="start_time"

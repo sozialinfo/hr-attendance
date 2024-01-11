@@ -26,7 +26,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div
-                            t-attf-class="{{record.user_id.raw_value == context.uid ? 'oe_kanban_color_10' : ''}} oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record"
+                            t-attf-class="{{record.user_id.raw_value == context.uid ? 'o_hr_kanban_own_employee' : ''}} oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record"
                         >
                             <field
                                 name="image_1024"
