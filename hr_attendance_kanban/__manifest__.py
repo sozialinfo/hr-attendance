@@ -23,6 +23,7 @@
         "web.assets_backend": [
             "hr_attendance_kanban/static/src/views/**/*.js",
             "hr_attendance_kanban/static/src/views/**/*.xml",
+            "hr_attendance_kanban/static/src/scss/hr_attendance_kanban.scss",
         ]
     },
 }
