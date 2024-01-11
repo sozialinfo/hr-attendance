@@ -26,4 +26,5 @@
             "hr_attendance_kanban/static/src/scss/hr_attendance_kanban.scss",
         ]
     },
+    "post_init_hook": "post_init_hook",
 }
