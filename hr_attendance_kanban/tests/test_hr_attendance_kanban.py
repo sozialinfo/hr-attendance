@@ -126,3 +126,43 @@ class TestHrAttendanceKanban(common.TransactionCase):
         # Test absent type unlink raises UserError
         with self.assertRaises(UserError):
             new_att_type_absent.unlink()
+
+    @users("test-user-admin")
+    def test_attendance_manual(self):
+        """Test employee attendance type when attendance is created, checked out and
+        deleted manually"""
+        public_employee = self.env["hr.employee.public"].browse(self.employee.ids)
+
+        # Create attendance manually
+        attendance = self.env["hr.attendance"].create(
+            {
+                "employee_id": public_employee.employee_id.id,
+                "check_in": datetime.now().strftime(DF),
+                "attendance_type_id": self.att_type_office.id,
+            }
+        )
+
+        # Ensure employee attendance type matches new ongoing attendance
+        self.assertEqual(
+            attendance.attendance_type_id, public_employee.attendance_type_id
+        )
+
+        # Check out attendance
+        attendance.check_out = datetime.now().strftime(DF)
+
+        # Ensure employee attendance went back to absent
+        self.assertEqual(self.att_type_absent, public_employee.attendance_type_id)
+
+        # Modify attendance to force it back to checked in
+        attendance.check_out = False
+
+        # Ensure employee attendance type matches new ongoing attendance
+        self.assertEqual(
+            attendance.attendance_type_id, public_employee.attendance_type_id
+        )
+
+        # Delete the ongoing attendance
+        attendance.unlink()
+
+        # Ensure employee attendance went back to absent
+        self.assertEqual(self.att_type_absent, public_employee.attendance_type_id)
