@@ -26,6 +26,7 @@ class HrEmployee(models.Model):
     @api.depends(
         "last_attendance_id.check_in",
         "last_attendance_id.check_out",
+        "last_attendance_id.attendance_type_id",
         "last_attendance_id",
     )
     def _compute_attendance_type_id(self):
