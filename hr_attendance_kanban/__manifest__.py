@@ -3,10 +3,11 @@
 
 {
     "name": "HR Kanban Attendance",
-    "version": "16.0.1.0.0",
+    "version": "16.0.1.1.0",
     "category": "Human Resources",
     "website": "https://github.com/OCA/hr-attendance",
-    "author": "Sozialinfo, Odoo Community Association (OCA)",
+    "author": "Sozialinfo, Odoo Community Association (OCA), Miika Nissi",
+    "maintainers": ["miikanissi"],
     "license": "LGPL-3",
     "installable": True,
     "depends": ["hr_attendance"],

@@ -8,6 +8,8 @@
                 <group>
                     <group colspan="4">
                         <field name="manual_mode" invisible="1" />
+                        <field name="edit_check_in" invisible="1" />
+                        <field name="check_in_mode" invisible="1" />
                         <field name="attendance_state" invisible="1" />
                         <field
                             name="public_employee_id"
@@ -24,34 +26,41 @@
                         />
                         <field
                             name="next_attendance_type_id"
-                            attrs="{'required': [('manual_mode', '=', True), ('attendance_state', '!=', 'checked_in')] , 'readonly': ['|', ('manual_mode', '!=', True), ('attendance_state', '!=', 'checked_out')], 'invisible': [('attendance_state', '!=', 'checked_out')]}"
+                            attrs="{'required': [('check_in_mode', 'in', ['check_in', 'edit_check_in'])], 'readonly': ['|', '&amp;', ('check_in_mode', 'not in', ['edit_check_in']), ('check_in_mode', '=', 'check_in'), ('manual_mode', '=', True), '&amp;', ('check_in_mode', 'not in', ['edit_check_in']), ('manual_mode', '!=', True)], 'invisible': [('check_in_mode', 'not in', ['check_in', 'edit_check_in'])]}"
                             domain="[('absent', '!=', True)]"
                             options="{'no_create': True}"
                         />
                         <field
                             name="start_time"
-                            attrs="{'required': [('attendance_state', '!=', 'checked_in')], 'readonly': [('attendance_state', '!=', 'checked_out')]}"
+                            attrs="{'required': [('check_in_mode', 'in', ['check_in', 'edit_check_in'])], 'readonly': [('check_in_mode', 'not in', ['check_in', 'edit_check_in'])]}"
                         />
                         <field
                             name="end_time"
-                            attrs="{'required': [('attendance_state', '!=', 'checked_out')], 'readonly': [('attendance_state', '!=', 'checked_in')]}"
+                            attrs="{'required': [('check_in_mode', 'in', ['check_out'])], 'readonly': [('check_in_mode', 'not in', ['check_out'])], 'invisible': [('check_in_mode', 'not in', ['check_out'])]}"
                         />
                         <field
                             name="comment"
-                            attrs="{'readonly': [('attendance_state', '!=', 'checked_out')]}"
+                            attrs="{'readonly': [('check_in_mode', 'not in', ['check_in', 'edit_check_in'])]}"
                         />
                     </group>
                 </group>
                 <footer>
                     <button
-                        attrs="{'invisible': [('attendance_state', '!=', 'checked_out')]}"
+                        attrs="{'invisible': [('check_in_mode', 'not in', ['edit_check_in'])]}"
+                        string="Edit Check In"
+                        name="action_edit"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button
+                        attrs="{'invisible': [('check_in_mode', 'not in', ['check_in'])]}"
                         string="Check In"
                         name="action_change"
                         type="object"
                         class="oe_highlight"
                     />
                     <button
-                        attrs="{'invisible': [('attendance_state', '!=', 'checked_in')]}"
+                        attrs="{'invisible': [('check_in_mode', 'not in', ['check_out'])]}"
                         string="Check Out"
                         name="action_change"
                         type="object"
