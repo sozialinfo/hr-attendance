@@ -27,6 +27,20 @@ class HrAttendanceKanbanWizard(models.Model):
             " when not dragged from kanban."
         )
     )
+    edit_check_in = fields.Boolean(
+        help=(
+            "Helper field passed in context to allow for editing of employee's"
+            " attendance record."
+        )
+    )
+    check_in_mode = fields.Selection(
+        [
+            ("check_in", "Check In"),
+            ("check_out", "Check Out"),
+            ("edit_check_in", "Edit Check In"),
+        ],
+        compute="_compute_check_in_mode",
+    )
 
     start_time = fields.Datetime(
         compute="_compute_start_time", store=True, readonly=False
@@ -34,9 +48,12 @@ class HrAttendanceKanbanWizard(models.Model):
     end_time = fields.Datetime(compute="_compute_end_time", store=True, readonly=False)
     comment = fields.Char(compute="_compute_comment", store=True, readonly=False)
 
-    @api.depends("last_attendance_id.check_in")
-    @api.depends("last_attendance_id.check_out")
-    @api.depends("last_attendance_id")
+    @api.depends(
+        "last_attendance_id.check_in",
+        "last_attendance_id.check_out",
+        "last_attendance_id",
+        "public_employee_id",
+    )
     def _compute_start_time(self):
         """Computes the default start time for check in/out wizard rounded
         down to the closest 5 minutes. If employee is checked in, get the checked in
@@ -58,9 +75,12 @@ class HrAttendanceKanbanWizard(models.Model):
             else:
                 wizard.start_time = time_now_rounded
 
-    @api.depends("last_attendance_id.check_in")
-    @api.depends("last_attendance_id.check_out")
-    @api.depends("last_attendance_id")
+    @api.depends(
+        "last_attendance_id.check_in",
+        "last_attendance_id.check_out",
+        "last_attendance_id",
+        "public_employee_id",
+    )
     def _compute_end_time(self):
         """Computes the end time for check in/out wizard rounded
         down to the closest 5 minutes when checking out."""
@@ -77,10 +97,15 @@ class HrAttendanceKanbanWizard(models.Model):
                 and not wizard.last_attendance_id.check_out
             ):
                 wizard.end_time = time_now_rounded
+            else:
+                wizard.end_time = False
 
-    @api.depends("last_attendance_id.comment")
-    @api.depends("last_attendance_id.check_out")
-    @api.depends("last_attendance_id")
+    @api.depends(
+        "last_attendance_id.comment",
+        "last_attendance_id.check_out",
+        "last_attendance_id",
+        "public_employee_id",
+    )
     def _compute_comment(self):
         """Computes the default comment for check in/out wizard. When already checked in
         get the current attendance comment, otherwise comment should be empty."""
@@ -94,6 +119,19 @@ class HrAttendanceKanbanWizard(models.Model):
             else:
                 wizard.comment = False
 
+    @api.depends("edit_check_in", "public_employee_id")
+    def _compute_check_in_mode(self):
+        """Computes the check in mode for the wizard based on the context passed in."""
+        for wizard in self:
+            if wizard.edit_check_in:
+                wizard.check_in_mode = "edit_check_in"
+            elif wizard.attendance_state == "checked_in":
+                wizard.check_in_mode = "check_out"
+            elif wizard.attendance_state == "checked_out":
+                wizard.check_in_mode = "check_in"
+            else:
+                wizard.check_in_mode = False
+
     def action_change(self):
         """Action called by wizard to change check in/out status, attendance type,
         and comment."""
@@ -101,9 +139,14 @@ class HrAttendanceKanbanWizard(models.Model):
         public_employee_id = self.public_employee_id
         public_employee_id.check_attendance_access()
 
+        self_sudo = self.sudo()
+
         # Check in by creating a new attendance record
-        if self.attendance_state != "checked_in":
-            if not self.next_attendance_type_id or self.next_attendance_type_id.absent:
+        if self_sudo.attendance_state != "checked_in":
+            if (
+                not self_sudo.next_attendance_type_id
+                or self_sudo.next_attendance_type_id.absent
+            ):
                 raise UserError(
                     _(
                         "Cannot perform check out on {empl_name}, employee is already"
@@ -113,8 +156,8 @@ class HrAttendanceKanbanWizard(models.Model):
             # Need to ensure new attendance does not start earlier or at the same time
             # as previous attendance to prevent hr.attendance record order being incorrect
             if (
-                self.last_attendance_id
-                and self.start_time <= self.last_attendance_id.check_in
+                self_sudo.last_attendance_id
+                and self_sudo.start_time <= self_sudo.last_attendance_id.check_in
             ):
                 raise UserError(
                     _(
@@ -124,15 +167,15 @@ class HrAttendanceKanbanWizard(models.Model):
                 )
             vals = {
                 "employee_id": public_employee_id.employee_id.id,
-                "check_in": self.start_time,
-                "comment": self.comment,
+                "check_in": self_sudo.start_time,
+                "comment": self_sudo.comment,
                 "attendance_type_id": (
-                    self.next_attendance_type_id.id
-                    if self.next_attendance_type_id
+                    self_sudo.next_attendance_type_id.id
+                    if self_sudo.next_attendance_type_id
                     else False
                 ),
             }
-            attendance = self.env["hr.attendance"].create(vals)
+            attendance = self_sudo.env["hr.attendance"].create(vals)
             return {
                 "type": "ir.actions.act_window_close",
                 "infos": {
@@ -142,7 +185,7 @@ class HrAttendanceKanbanWizard(models.Model):
             }
 
         # Check out by checking out the current checked in attendance record
-        attendance = self.env["hr.attendance"].search(
+        attendance = self_sudo.env["hr.attendance"].search(
             [
                 ("employee_id", "=", public_employee_id.employee_id.id),
                 ("check_out", "=", False),
@@ -150,15 +193,63 @@ class HrAttendanceKanbanWizard(models.Model):
             limit=1,
         )
         if attendance:
-            if self.end_time < attendance.check_in:
+            if self_sudo.end_time < attendance.check_in:
                 raise UserError(
                     _('"Check Out" time cannot be earlier than "Check In" time.')
                 )
-            attendance.check_out = self.end_time
+            attendance.check_out = self_sudo.end_time
         else:
             raise UserError(
                 _(
                     "Cannot perform check out on {empl_name}, could not find"
+                    " corresponding check in. Your attendances have probably been"
+                    " modified manually by human resources."
+                ).format(empl_name=public_employee_id.name)
+            )
+        return {
+            "type": "ir.actions.act_window_close",
+            "infos": {
+                "attendanceId": attendance.id,
+                "employeeId": public_employee_id.id,
+            },
+        }
+
+    def action_edit(self):
+        """Action called by wizard to change check in time, attendance type,
+        and comment."""
+        self.ensure_one()
+        public_employee_id = self.public_employee_id
+        public_employee_id.check_attendance_access()
+
+        self_sudo = self.sudo()
+
+        if self_sudo.attendance_state != "checked_in":
+            raise UserError(
+                _(
+                    "Cannot edit attendance of {empl_name} when they are not checked in."
+                ).format(empl_name=public_employee_id.name)
+            )
+
+        # Get current attendance record
+        attendance = self_sudo.env["hr.attendance"].search(
+            [
+                ("employee_id", "=", public_employee_id.employee_id.id),
+                ("check_out", "=", False),
+            ],
+            limit=1,
+        )
+        if attendance:
+            attendance.write(
+                {
+                    "check_in": self_sudo.start_time,
+                    "comment": self_sudo.comment,
+                    "attendance_type_id": self_sudo.next_attendance_type_id.id,
+                }
+            )
+        else:
+            raise UserError(
+                _(
+                    "Cannot edit check in on {empl_name}, could not find"
                     " corresponding check in. Your attendances have probably been"
                     " modified manually by human resources."
                 ).format(empl_name=public_employee_id.name)
