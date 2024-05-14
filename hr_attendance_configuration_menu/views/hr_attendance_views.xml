@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem
+        id="hr_attendance_configuration_menu"
+        name="Configuration"
+        parent="hr_attendance.menu_hr_attendance_settings"
+        sequence="99"
+        action="hr_attendance.action_hr_attendance_settings"
+        groups="hr_attendance.group_hr_attendance_manager"
+    />
+    <menuitem
+        id="hr_attendance_reason.hr_attendance_settings_redefinition_menu"
+        name="Configuration"
+        parent="hr_attendance.menu_hr_attendance_settings"
+        sequence="99"
+        action="hr_attendance.action_hr_attendance_settings"
+        groups="hr_attendance.group_hr_attendance_manager"
+        active="False"
+    />
+    <menuitem
+        id="hr_attendance_kanban.hr_attendance_settings_redefinition_menu"
+        name="Configuration"
+        parent="hr_attendance.menu_hr_attendance_settings"
+        sequence="99"
+        action="hr_attendance.action_hr_attendance_settings"
+        groups="hr_attendance.group_hr_attendance_manager"
+        active="False"
+    />
+</odoo>

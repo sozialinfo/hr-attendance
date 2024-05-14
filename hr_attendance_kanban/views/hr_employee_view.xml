@@ -7,6 +7,7 @@
         <field name="priority">500</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_email']" position="after">
+                <field name="is_kanban_attendance" />
                 <field name="attendance_type_id" readonly="1" />
             </xpath>
         </field>
@@ -19,6 +20,7 @@
         <field name="priority">500</field>
         <field name="arch" type="xml">
             <field name="work_email" position="after">
+                <field name="is_kanban_attendance" optional="hide" />
                 <field name="attendance_type_id" readonly="1" optional="hide" />
             </field>
         </field>

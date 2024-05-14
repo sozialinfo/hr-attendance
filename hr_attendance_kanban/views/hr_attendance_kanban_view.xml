@@ -8,9 +8,13 @@
                 class="o_kanban_mobile"
                 js_class="hr_employee_attendance_kanban"
                 sample="1"
+                group_create="0"
                 create="1"
                 archivable="0"
                 default_group_by="attendance_type_id"
+                default_order="is_cur_user desc, name asc"
+                action="action_edit_check_in"
+                type="object"
             >
                 <field name="id" />
                 <field name="user_id" />
@@ -47,15 +51,18 @@
                                         </strong>
                                     </div>
                                 </div>
-                                <ul>
-                                   <li
-                                        t-if="record.attendance_state.raw_value != 'checked_out'"
-                                    ><field name="last_check_in" /></li>
-                                   <li
-                                        t-if="record.attendance_state.raw_value != 'checked_out'"
-                                        class="o_text_overflow"
-                                    ><field name="last_attendance_comment" /></li>
-                               </ul>
+                                <div class="o_kanban_record_body">
+                                    <ul>
+                                       <li
+                                            t-if="record.attendance_state.raw_value != 'checked_out'"
+                                        ><field name="last_check_in" /></li>
+                                       <li
+                                            t-if="record.attendance_state.raw_value != 'checked_out'"
+                                            class="o_text_overflow"
+                                        ><field name="last_attendance_comment" /></li>
+                                   </ul>
+                                </div>
+                                <div class="o_kanban_record_bottom" />
                             </div>
                         </div>
                     </t>
@@ -64,11 +71,30 @@
         </field>
     </record>
 
+    <record id="view_hr_attendance_employee_search" model="ir.ui.view">
+        <field name="name">hr.attendance.employee.search</field>
+        <field name="mode">primary</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="filter[@name='my_team']" position="before">
+                <filter
+                    name="filter_cur_user"
+                    string="Current User"
+                    domain="[('is_cur_user', '=', True)]"
+                />
+                <separator />
+            </xpath>
+         </field>
+    </record>
+
     <record id="action_hr_attendance_employee_kanban" model="ir.actions.act_window">
         <field name="name">Employees Kanban</field>
         <field name="res_model">hr.employee.public</field>
         <field name="view_mode">kanban</field>
+        <field name="domain">[("is_kanban_attendance", "=", True)]</field>
         <field name="view_id" ref="view_hr_attendance_employee_kanban" />
+        <field name="search_view_id" ref="view_hr_attendance_employee_search" />
     </record>
 
     <menuitem
