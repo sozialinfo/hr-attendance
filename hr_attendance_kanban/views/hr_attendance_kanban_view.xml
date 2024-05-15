@@ -9,7 +9,7 @@
                 js_class="hr_employee_attendance_kanban"
                 sample="1"
                 group_create="0"
-                create="1"
+                create="0"
                 archivable="0"
                 default_group_by="attendance_type_id"
                 default_order="is_cur_user desc, name asc"
