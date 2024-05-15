@@ -6,10 +6,10 @@
         t-inherit-mode="primary"
         owl="1"
     >
-        <xpath expr="//button[hasclass('o-kanban-button-new')]" position="replace">
+        <xpath expr="//button[hasclass('o-kanban-button-new')]//.." position="after">
             <button
                 type="button"
-                t-att-class="'btn' + (!env.isSmall ? ' btn-primary' : 'btn-secondary')"
+                t-att-class="'btn btn-check-in' + (!env.isSmall ? ' btn-primary' : 'btn-secondary')"
                 t-on-click="checkInOutButtonClicked"
             >
                 Check In / Check Out
