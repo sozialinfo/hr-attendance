@@ -26,6 +26,7 @@
                 <field name="last_check_out" />
                 <field name="last_attendance_comment" />
                 <field name="attendance_state" />
+                <field name="on_break" />
                 <progressbar field="attendance_type_id" colors='{}' />
                 <templates>
                     <t t-name="kanban-box">
@@ -40,6 +41,12 @@
                                 options="{'zoom': true, 'zoom_delay': 1000}"
                             />
 
+                            <div
+                                class="ribbon ribbon-top-right"
+                                attrs="{'invisible': [('on_break', '=', False)]}"
+                            >
+                                <span class="bg-odoo">On Break</span>
+                            </div>
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
@@ -62,7 +69,25 @@
                                         ><field name="last_attendance_comment" /></li>
                                    </ul>
                                 </div>
-                                <div class="o_kanban_record_bottom" />
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left" />
+                                    <div class="oe_kanban_bottom_right">
+                                        <button
+                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.on_break.raw_value == false"
+                                            class="btn o_kanban_pause_button fa fa-pause-circle"
+                                            title="Start Break"
+                                            name="action_break_wizard"
+                                            type="object"
+                                        />
+                                        <button
+                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.on_break.raw_value != false"
+                                            class="btn o_kanban_play_button fa fa-play-circle"
+                                            title="End Break"
+                                            name="action_break_wizard"
+                                            type="object"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -82,6 +107,12 @@
                     name="filter_cur_user"
                     string="Current User"
                     domain="[('is_cur_user', '=', True)]"
+                />
+                <separator />
+                <filter
+                    name="filter_on_break"
+                    string="On Break"
+                    domain="[('on_break', '!=', False)]"
                 />
                 <separator />
             </xpath>

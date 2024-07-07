@@ -22,6 +22,11 @@ class HrEmployee(models.Model):
         store=True,
         groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
     )
+    on_break = fields.Datetime(
+        related="last_attendance_id.on_break",
+        store=True,
+        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
+    )
     is_kanban_attendance = fields.Boolean(
         string="Kanban Attendance",
         groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",

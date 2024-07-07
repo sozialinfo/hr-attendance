@@ -17,7 +17,16 @@ class HrAttendanceKanbanWizard(models.Model):
     last_attendance_id = fields.Many2one(
         related="public_employee_id.last_attendance_id"
     )
+    on_break = fields.Datetime(related="last_attendance_id.on_break")
+
     attendance_state = fields.Selection(related="public_employee_id.attendance_state")
+
+    break_time = fields.Float(
+        help="Duration of the break in hours",
+        compute="_compute_break_time",
+        store=True,
+        readonly=False,
+    )
 
     next_attendance_type_id = fields.Many2one("hr.attendance.type", "Attendance Type")
 
@@ -43,10 +52,32 @@ class HrAttendanceKanbanWizard(models.Model):
     )
 
     start_time = fields.Datetime(
-        compute="_compute_start_time", store=True, readonly=False
+        compute="_compute_start_time",
+        store=True,
+        readonly=False,
+        required=True,
+        precompute=True,
     )
     end_time = fields.Datetime(compute="_compute_end_time", store=True, readonly=False)
     comment = fields.Char(compute="_compute_comment", store=True, readonly=False)
+
+    @api.depends(
+        "last_attendance_id.check_in",
+        "last_attendance_id.check_out",
+        "last_attendance_id",
+        "public_employee_id",
+    )
+    def _compute_break_time(self):
+        for wizard in self:
+            if (
+                wizard.public_employee_id
+                and wizard.last_attendance_id
+                and not wizard.last_attendance_id.check_out
+                and wizard.last_attendance_id.break_time
+            ):
+                wizard.break_time = wizard.last_attendance_id.break_time
+            else:
+                wizard.break_time = 0.0
 
     @api.depends(
         "last_attendance_id.check_in",
@@ -154,7 +185,7 @@ class HrAttendanceKanbanWizard(models.Model):
                     ).format(empl_name=public_employee_id.name)
                 )
             # Need to ensure new attendance does not start earlier or at the same time
-            # as previous attendance to prevent hr.attendance record order being incorrect
+            # as previous attendance to ensure correct hr.attendance record order
             if (
                 self_sudo.last_attendance_id
                 and self_sudo.start_time <= self_sudo.last_attendance_id.check_in
@@ -197,7 +228,11 @@ class HrAttendanceKanbanWizard(models.Model):
                 raise UserError(
                     _('"Check Out" time cannot be earlier than "Check In" time.')
                 )
-            attendance.check_out = self_sudo.end_time
+            if attendance.on_break:
+                attendance._action_end_break()
+            attendance.write(
+                {"check_out": self_sudo.end_time, "break_time": self_sudo.break_time}
+            )
         else:
             raise UserError(
                 _(
@@ -226,8 +261,9 @@ class HrAttendanceKanbanWizard(models.Model):
         if self_sudo.attendance_state != "checked_in":
             raise UserError(
                 _(
-                    "Cannot edit attendance of {empl_name} when they are not checked in."
-                ).format(empl_name=public_employee_id.name)
+                    f"Cannot edit attendance of {public_employee_id.name} when they are"
+                    " not checked in."
+                )
             )
 
         # Get current attendance record
@@ -244,6 +280,7 @@ class HrAttendanceKanbanWizard(models.Model):
                     "check_in": self_sudo.start_time,
                     "comment": self_sudo.comment,
                     "attendance_type_id": self_sudo.next_attendance_type_id.id,
+                    "break_time": self_sudo.break_time,
                 }
             )
         else:

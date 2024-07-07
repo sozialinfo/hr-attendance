@@ -10,6 +10,7 @@
                 <group name="attendance_type">
                     <field name="attendance_type_id" />
                     <field name="comment" />
+                    <field name="break_time" widget="float_time" />
                 </group>
             </sheet>
         </field>
@@ -22,6 +23,7 @@
         <field name="priority">500</field>
         <field name="arch" type="xml">
             <field name="worked_hours" position="after">
+                <field name="break_time" widget="float_time" />
                 <field name="attendance_type_id" domain="[('absent', '!=', True)]" />
                 <field name="comment" />
             </field>
