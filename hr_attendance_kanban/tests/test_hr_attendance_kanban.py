@@ -1,7 +1,7 @@
 # Copyright 2023 Verein sozialinfo.ch
 # License LGPL-3 - See http://www.gnu.org/licenses/lgpl-3.0.html
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import common, new_test_user, users
@@ -109,6 +109,13 @@ class TestHrAttendanceKanban(common.TransactionCase):
                     "start_time": datetime.now().strftime(DF),
                 }
             ).action_change()
+        with self.assertRaises(AccessError):
+            self.env["hr.attendance.kanban.break"].create(
+                {
+                    "public_employee_id": public_admin.id,
+                    "start_time": datetime.now().strftime(DF),
+                }
+            ).action_start_break()
 
     @users("test-user-admin")
     def test_attendance_type(self):
@@ -166,3 +173,75 @@ class TestHrAttendanceKanban(common.TransactionCase):
 
         # Ensure employee attendance went back to absent
         self.assertEqual(self.att_type_absent, public_employee.attendance_type_id)
+
+    @users("test-user")
+    def test_employee_break(self):
+        """Test employee user can start and end a break in attendance kanban"""
+        public_employee = self.env["hr.employee.public"].browse(self.employee.ids)
+
+        check_in_time = datetime.now()
+
+        # Check in
+        self.env["hr.attendance.kanban.wizard"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "next_attendance_type_id": self.att_type_office.id,
+                "start_time": check_in_time.strftime(DF),
+                "comment": self.att_comment,
+            }
+        ).action_change()
+
+        # Add 10 minutes
+        break_start_time = check_in_time + timedelta(minutes=10)
+
+        # Start break
+        self.env["hr.attendance.kanban.break"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "start_time": break_start_time.strftime(DF),
+            }
+        ).action_start_break()
+
+        self.assertEqual(
+            public_employee.on_break, public_employee.last_attendance_id.on_break
+        )
+        self.assertEqual(
+            public_employee.on_break, break_start_time.replace(microsecond=0)
+        )
+        self.assertEqual(public_employee.last_attendance_id.break_time, 0.0)
+
+        # Add 30 minutes
+        break_end_time = break_start_time + timedelta(minutes=30)
+
+        # End break
+        self.env["hr.attendance.kanban.break"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "end_time": break_end_time.strftime(DF),
+            }
+        ).action_end_break()
+
+        self.assertEqual(
+            public_employee.on_break, public_employee.last_attendance_id.on_break
+        )
+        self.assertFalse(public_employee.on_break)
+        self.assertEqual(public_employee.last_attendance_id.break_time, 0.5)
+
+        # Add 8 hours since check in
+        check_out_time = check_in_time + timedelta(hours=8)
+
+        # Check out
+        self.env["hr.attendance.kanban.wizard"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "next_attendance_type_id": self.att_type_absent.id,
+                "end_time": check_out_time.strftime(DF),
+            }
+        ).action_change()
+
+        self.assertEqual(
+            public_employee.on_break, public_employee.last_attendance_id.on_break
+        )
+        self.assertFalse(public_employee.on_break)
+        self.assertEqual(public_employee.last_attendance_id.break_time, 0.5)
+        self.assertEqual(public_employee.last_attendance_id.worked_hours, 7.5)
