@@ -7,6 +7,7 @@
             <form string="Check In / Check Out">
                 <group>
                     <group colspan="4">
+                        <field name="on_break" invisible="1" />
                         <field name="manual_mode" invisible="1" />
                         <field name="edit_check_in" invisible="1" />
                         <field name="check_in_mode" invisible="1" />
@@ -38,6 +39,27 @@
                             name="end_time"
                             attrs="{'required': [('check_in_mode', 'in', ['check_out'])], 'readonly': [('check_in_mode', 'not in', ['check_out'])], 'invisible': [('check_in_mode', 'not in', ['check_out'])]}"
                         />
+                        <label
+                            for="break_time"
+                            attrs="{'invisible': [('check_in_mode', 'not in', ['check_out', 'edit_check_in'])]}"
+                        />
+                        <div
+                            class="o_row"
+                            name="break_time"
+                            attrs="{'invisible': [('check_in_mode', 'not in', ['check_out', 'edit_check_in'])]}"
+                        >
+                            <field
+                                name="break_time"
+                                widget="float_time"
+                                class="oe_inline"
+                                attrs="{'readonly': [('check_in_mode', 'not in', ['check_out', 'edit_check_in'])]}"
+                            />
+                            <div class="mt4">
+                                <strong>
+                                    hours
+                                </strong>
+                            </div>
+                        </div>
                         <field
                             name="comment"
                             attrs="{'readonly': [('check_in_mode', 'not in', ['check_in', 'edit_check_in'])]}"

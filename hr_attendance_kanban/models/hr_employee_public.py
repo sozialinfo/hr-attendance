@@ -1,6 +1,7 @@
 # Copyright 2023 Verein sozialinfo.ch
 # License LGPL-3 - See http://www.gnu.org/licenses/lgpl-3.0.html
 
+
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
@@ -42,6 +43,12 @@ class HrEmployeePublic(models.Model):
         compute="_compute_is_cur_user",
         search="_search_is_cur_user",
         help="Technical field to see if the current user is the user of the record.",
+    )
+
+    on_break = fields.Datetime(
+        related="employee_id.on_break",
+        readonly=True,
+        groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
     )
 
     @api.depends("employee_id.attendance_type_id")
@@ -290,6 +297,25 @@ class HrEmployeePublic(models.Model):
                     )
                 )
 
+        wizard_action.update(
+            {
+                "context": ctx,
+            }
+        )
+        return wizard_action
+
+    def action_break_wizard(self):
+        self.ensure_one()
+        ctx = dict(self.env.context)
+        wizard_action = self.env["ir.actions.act_window"]._for_xml_id(
+            "hr_attendance_kanban.hr_attendance_kanban_break_action"
+        )
+        if not self:
+            raise UserError(_("A valid employee must be selected to go on a break."))
+
+        self.check_attendance_access()
+
+        ctx.update({"default_public_employee_id": self.id})
         wizard_action.update(
             {
                 "context": ctx,
