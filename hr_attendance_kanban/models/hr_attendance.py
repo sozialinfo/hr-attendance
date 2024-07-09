@@ -50,6 +50,13 @@ class HrAttendance(models.Model):
                 attendance.worked_hours = False
         return super(HrAttendance, self - attendance_with_break)._compute_worked_hours()
 
+    def write(self, vals):
+        res = super().write(vals)
+        # Ensure that the break is ended when checking out
+        if vals.get("check_out"):
+            self.filtered(lambda x: x.on_break)._action_end_break()
+        return res
+
     def _action_start_break(self, start_time):
         self.write({"on_break": start_time})
 
