@@ -19,6 +19,7 @@
                 <field name="id" />
                 <field name="user_id" />
                 <field name="user_partner_id" />
+                <field name="is_cur_user" />
                 <field name="image_128" />
                 <field name="attendance_type_id" />
                 <field name="last_attendance_id" />
@@ -78,6 +79,17 @@
                                             title="Start Break"
                                             name="action_break_wizard"
                                             type="object"
+                                            groups="hr_attendance.group_hr_attendance_user"
+                                        />
+                                        <button
+                                            t-if="record.attendance_state.raw_value == 'checked_in'
+                                             and record.on_break.raw_value == false
+                                             and record.user_id.raw_value == context.uid"
+                                            class="btn o_kanban_pause_button fa fa-pause-circle"
+                                            title="Start Break"
+                                            name="action_break_wizard"
+                                            type="object"
+                                            groups="!hr_attendance.group_hr_attendance_user"
                                         />
                                         <button
                                             t-if="record.attendance_state.raw_value == 'checked_in' and record.on_break.raw_value != false"
@@ -85,6 +97,17 @@
                                             title="End Break"
                                             name="action_break_wizard"
                                             type="object"
+                                            groups="hr_attendance.group_hr_attendance_user"
+                                        />
+                                        <button
+                                            t-if="record.attendance_state.raw_value == 'checked_in'
+                                             and record.on_break.raw_value != false
+                                             and record.user_id.raw_value == context.uid"
+                                            class="btn o_kanban_play_button fa fa-play-circle"
+                                            title="End Break"
+                                            name="action_break_wizard"
+                                            type="object"
+                                            groups="!hr_attendance.group_hr_attendance_user"
                                         />
                                     </div>
                                 </div>

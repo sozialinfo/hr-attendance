@@ -1,0 +1,46 @@
+////// ============ Inspector ===============
+////// ======================================
+
+.o_employee_inspector {
+    flex: 0 0 200px;
+    overflow: auto;
+    background-color: #ffffff;
+
+    .o_documents_inspector_info {
+        border-top: 1px solid #4c4c4c;
+        padding: $o-horizontal-padding * 0.5 $o-horizontal-padding * 0.5
+            $o-horizontal-padding * 0.5;
+    }
+
+    .o_timeoff_card {
+        &:not(:last-child) {
+            border-bottom: 2px solid $border-color;
+            border-right: none;
+        }
+    }
+    .o_overtime_card {
+        flex-direction: column;
+        flex-grow: 1;
+        display: flex;
+        text-align: center;
+
+        &:not(:last-child) {
+            border-bottom: 2px solid $border-color;
+        }
+
+        span {
+            line-height: 1;
+        }
+
+        .o_overtime_name {
+            color: $body-color;
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+
+        .o_overtime_duration {
+            font-size: 30px;
+            font-weight: bold;
+        }
+    }
+}

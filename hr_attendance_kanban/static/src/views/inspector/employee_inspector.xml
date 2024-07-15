@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="hr_attendance_kanban.EmployeeInspector" owl="1">
+        <div
+            class="o_employee_inspector h-100"
+            t-if="Object.keys(state.employee).length > 0"
+        >
+            <div class="o_employee_inspector_info">
+                <div class="o_overtime_card py-3 text-odoo">
+                    <strong class="o_overtime_name">Total Overtime</strong>
+                    <span class="o_overtime_duration">
+                        <t
+                            t-esc="formatFloatTime(state.employee.total_overtime || 0)"
+                            t-options='{"widget": "float_time"}'
+                        />
+                    </span>
+                    <div class="text-uppercase">
+                        hours
+                    </div>
+                </div>
+                <t t-foreach="state.holidays" t-as="holiday" t-key="holiday[3]">
+                    <TimeOffCard
+                        name="holiday[0]"
+                        data="holiday[1]"
+                        requires_allocation="holiday[2] == 'yes'"
+                        id="holiday[3]"
+                    />
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
