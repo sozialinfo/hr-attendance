@@ -22,8 +22,8 @@ class HrEmployee(models.Model):
         store=True,
         groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
     )
-    on_break = fields.Datetime(
-        related="last_attendance_id.on_break",
+    break_start_time = fields.Datetime(
+        related="last_attendance_id.break_start_time",
         store=True,
         groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
     )

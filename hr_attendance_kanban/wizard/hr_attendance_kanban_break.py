@@ -17,7 +17,7 @@ class HrAttendanceKanbanBreak(models.Model):
     last_attendance_id = fields.Many2one(
         related="public_employee_id.last_attendance_id"
     )
-    on_break = fields.Datetime(related="last_attendance_id.on_break")
+    break_start_time = fields.Datetime(related="last_attendance_id.break_start_time")
 
     attendance_state = fields.Selection(related="public_employee_id.attendance_state")
 
@@ -31,8 +31,8 @@ class HrAttendanceKanbanBreak(models.Model):
     end_time = fields.Datetime(compute="_compute_end_time", store=True, readonly=False)
 
     @api.depends(
-        "on_break",
-        "last_attendance_id.on_break",
+        "break_start_time",
+        "last_attendance_id.break_start_time",
         "last_attendance_id",
         "public_employee_id",
     )
@@ -51,9 +51,9 @@ class HrAttendanceKanbanBreak(models.Model):
             if (
                 wizard.public_employee_id
                 and wizard.last_attendance_id
-                and wizard.on_break
+                and wizard.break_start_time
             ):
-                wizard.start_time = wizard.on_break
+                wizard.start_time = wizard.break_start_time
             else:
                 wizard.start_time = time_now_rounded
 
@@ -80,7 +80,7 @@ class HrAttendanceKanbanBreak(models.Model):
 
         self_sudo = self.sudo()
 
-        if self_sudo.on_break:
+        if self_sudo.break_start_time:
             raise UserError(
                 _(
                     f"Cannot start a break for {public_employee_id.name}, employee is"
@@ -110,14 +110,13 @@ class HrAttendanceKanbanBreak(models.Model):
         }
 
     def action_end_break(self):
-        """Action called by wizard to end a break."""
         self.ensure_one()
         public_employee_id = self.public_employee_id
         public_employee_id.check_attendance_access()
 
         self_sudo = self.sudo()
 
-        if not self_sudo.on_break:
+        if not self_sudo.break_start_time:
             raise UserError(
                 _(
                     f"Cannot end a break for {public_employee_id.name}, employee is"
@@ -139,9 +138,20 @@ class HrAttendanceKanbanBreak(models.Model):
         if not self_sudo.end_time or self_sudo.end_time < self_sudo.start_time:
             raise UserError(_('"End Time" cannot be earlier than "Start Time".'))
 
-        self_sudo.last_attendance_id._action_end_break(
-            start_time=self_sudo.start_time, end_time=self_sudo.end_time
-        )
+        # Gather values for new attendance record
+        new_attendance_vals = {
+            "employee_id": public_employee_id.employee_id.id,
+            "check_in": self_sudo.end_time,
+            "comment": self_sudo.last_attendance_id.comment,
+            "attendance_type_id": self_sudo.last_attendance_id.attendance_type_id.id,
+        }
+
+        # End current attendance when break started
+        self_sudo.last_attendance_id._action_check_out(end_time=self_sudo.start_time)
+
+        # Start a new attendance when break ended
+        self_sudo.env["hr.attendance"].create(new_attendance_vals)
+
         return {
             "type": "ir.actions.act_window_close",
             "infos": {

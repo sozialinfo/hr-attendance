@@ -17,16 +17,9 @@ class HrAttendanceKanbanWizard(models.Model):
     last_attendance_id = fields.Many2one(
         related="public_employee_id.last_attendance_id"
     )
-    on_break = fields.Datetime(related="last_attendance_id.on_break")
+    break_start_time = fields.Datetime(related="last_attendance_id.break_start_time")
 
     attendance_state = fields.Selection(related="public_employee_id.attendance_state")
-
-    break_time = fields.Float(
-        help="Duration of the break in hours",
-        compute="_compute_break_time",
-        store=True,
-        readonly=False,
-    )
 
     next_attendance_type_id = fields.Many2one("hr.attendance.type", "Attendance Type")
 
@@ -60,24 +53,6 @@ class HrAttendanceKanbanWizard(models.Model):
     )
     end_time = fields.Datetime(compute="_compute_end_time", store=True, readonly=False)
     comment = fields.Char(compute="_compute_comment", store=True, readonly=False)
-
-    @api.depends(
-        "last_attendance_id.check_in",
-        "last_attendance_id.check_out",
-        "last_attendance_id",
-        "public_employee_id",
-    )
-    def _compute_break_time(self):
-        for wizard in self:
-            if (
-                wizard.public_employee_id
-                and wizard.last_attendance_id
-                and not wizard.last_attendance_id.check_out
-                and wizard.last_attendance_id.break_time
-            ):
-                wizard.break_time = wizard.last_attendance_id.break_time
-            else:
-                wizard.break_time = 0.0
 
     @api.depends(
         "last_attendance_id.check_in",
@@ -228,11 +203,14 @@ class HrAttendanceKanbanWizard(models.Model):
                 raise UserError(
                     _('"Check Out" time cannot be earlier than "Check In" time.')
                 )
-            if attendance.on_break:
-                attendance._action_end_break()
-            attendance.write(
-                {"check_out": self_sudo.end_time, "break_time": self_sudo.break_time}
-            )
+            if self_sudo.break_start_time:
+                raise UserError(
+                    _(
+                        "Cannot perform check out on {empl_name} while they are on"
+                        " break. Please end the break first."
+                    ).format(empl_name=public_employee_id.name)
+                )
+            attendance._action_check_out(end_time=self_sudo.end_time)
         else:
             raise UserError(
                 _(
@@ -280,7 +258,6 @@ class HrAttendanceKanbanWizard(models.Model):
                     "check_in": self_sudo.start_time,
                     "comment": self_sudo.comment,
                     "attendance_type_id": self_sudo.next_attendance_type_id.id,
-                    "break_time": self_sudo.break_time,
                 }
             )
         else:

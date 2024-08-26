@@ -17,64 +17,59 @@ class HrAttendance(models.Model):
     )
     comment = fields.Char(help="Optional comment for attendance")
 
-    break_time = fields.Float(help="Duration of the break in hours", default=0.0)
-    on_break = fields.Datetime(
+    break_start_time = fields.Datetime(
         help=(
             "Start time of the break. This is a technical field used to calculate break"
-            " time."
+            " time and determine if an attendance is on break."
         ),
         readonly=True,
     )
-
-    _sql_constraints = [
-        (
-            "check_break_time_positive",
-            "CHECK(break_time >= 0.0)",
-            "The break time cannot be negative.",
-        ),
-    ]
 
     @api.model
     def _read_group_attendance_type_ids(self, stages, domain, order):
         return self.env["hr.attendance.type"].search([])
 
-    @api.depends("check_in", "check_out", "break_time")
-    def _compute_worked_hours(self):
-        attendance_with_break = self.filtered(lambda a: a.break_time > 0)
-        for attendance in attendance_with_break:
-            if attendance.check_out and attendance.check_in:
-                delta = attendance.check_out - attendance.check_in
-                worked_hours = (delta.total_seconds() / 3600.0) - attendance.break_time
-                attendance.worked_hours = max(0.0, worked_hours)
-            else:
-                attendance.worked_hours = False
-        return super(HrAttendance, self - attendance_with_break)._compute_worked_hours()
+    @api.constrains("check_out", "check_in", "break_start_time")
+    def _check_break_time(self):
+        for attendance in self.filtered("break_start_time"):
+            if attendance.check_out:
+                raise UserError(_("Employee cannot start a break while checked out."))
+            elif (
+                attendance.check_in
+                and attendance.check_in >= attendance.break_start_time
+            ):
+                raise UserError(_("Employee cannot start a break before checking in."))
 
     def write(self, vals):
         res = super().write(vals)
         # Ensure that the break is ended when checking out
         if vals.get("check_out"):
-            self.filtered(lambda x: x.on_break)._action_end_break()
+            self.filtered(lambda x: x.break_start_time).write(
+                {"break_start_time": False}
+            )
         return res
 
-    def _action_start_break(self, start_time):
-        self.write({"on_break": start_time})
+    def _action_start_break(self, start_time=None):
+        """
+        Starts a break for the employee by setting the break_start_time.
 
-    def _action_end_break(self, start_time=None, end_time=None):
-        if not end_time:
-            self.write({"on_break": False})
-            return
-        for attendance in self:
-            if not attendance.on_break:
-                raise UserError(_("Employee is not on break."))
-            if not start_time:
-                start_time = attendance.on_break
-            attendance.write(
-                {
-                    "break_time": (
-                        attendance.break_time
-                        + (end_time - start_time).total_seconds() / 3600
-                    ),
-                    "on_break": False,
-                }
-            )
+        :param start_time: Optional datetime to set as the break_start_time. \
+            If not provided, the current datetime is used.
+        """
+        self.write({"break_start_time": start_time or fields.Datetime.now()})
+
+    def _action_check_out(self, end_time=None):
+        """
+        Checks out the employee by setting the check_out time resetting the \
+        break_start_time.
+
+        :param end_time: Optional datetime to set as the check_out time.
+        :raises UserError: If the employee is already checked out.
+        """
+        self.ensure_one()
+        if self.check_out:
+            raise UserError(_("Employee is already checked out."))
+
+        self.write(
+            {"check_out": end_time or fields.Datetime.now(), "break_start_time": False}
+        )
