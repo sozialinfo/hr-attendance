@@ -191,8 +191,8 @@ class TestHrAttendanceKanban(common.TransactionCase):
             }
         ).action_change()
 
-        # Add 10 minutes
-        break_start_time = check_in_time + timedelta(minutes=10)
+        # Add 30 minutes
+        break_start_time = check_in_time + timedelta(minutes=30)
 
         # Start break
         self.env["hr.attendance.kanban.break"].create(
@@ -203,17 +203,18 @@ class TestHrAttendanceKanban(common.TransactionCase):
         ).action_start_break()
 
         self.assertEqual(
-            public_employee.on_break, public_employee.last_attendance_id.on_break
+            public_employee.break_start_time,
+            public_employee.last_attendance_id.break_start_time,
         )
         self.assertEqual(
-            public_employee.on_break, break_start_time.replace(microsecond=0)
+            public_employee.break_start_time, break_start_time.replace(microsecond=0)
         )
-        self.assertEqual(public_employee.last_attendance_id.break_time, 0.0)
 
         # Add 30 minutes
         break_end_time = break_start_time + timedelta(minutes=30)
 
         # End break
+        first_attendance = public_employee.last_attendance_id
         self.env["hr.attendance.kanban.break"].create(
             {
                 "public_employee_id": public_employee.id,
@@ -222,10 +223,24 @@ class TestHrAttendanceKanban(common.TransactionCase):
         ).action_end_break()
 
         self.assertEqual(
-            public_employee.on_break, public_employee.last_attendance_id.on_break
+            public_employee.break_start_time,
+            public_employee.last_attendance_id.break_start_time,
         )
-        self.assertFalse(public_employee.on_break)
-        self.assertEqual(public_employee.last_attendance_id.break_time, 0.5)
+        self.assertFalse(public_employee.break_start_time)
+
+        # Ensure the first attendance has ended and there is a new attendance
+        attendances = self.env["hr.attendance"].search(
+            [("employee_id", "=", public_employee.employee_id.id)]
+        )
+        self.assertEqual(len(attendances), 2)
+        self.assertNotEqual(first_attendance.id, public_employee.last_attendance_id.id)
+        self.assertEqual(
+            first_attendance.check_out, break_start_time.replace(microsecond=0)
+        )
+        self.assertEqual(
+            public_employee.last_attendance_id.check_in,
+            break_end_time.replace(microsecond=0),
+        )
 
         # Add 8 hours since check in
         check_out_time = check_in_time + timedelta(hours=8)
@@ -240,8 +255,9 @@ class TestHrAttendanceKanban(common.TransactionCase):
         ).action_change()
 
         self.assertEqual(
-            public_employee.on_break, public_employee.last_attendance_id.on_break
+            public_employee.break_start_time,
+            public_employee.last_attendance_id.break_start_time,
         )
-        self.assertFalse(public_employee.on_break)
-        self.assertEqual(public_employee.last_attendance_id.break_time, 0.5)
-        self.assertEqual(public_employee.last_attendance_id.worked_hours, 7.5)
+        self.assertFalse(public_employee.break_start_time)
+        self.assertEqual(first_attendance.worked_hours, 0.5)
+        self.assertEqual(public_employee.last_attendance_id.worked_hours, 7.0)

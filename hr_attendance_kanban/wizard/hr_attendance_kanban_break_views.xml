@@ -7,7 +7,7 @@
             <form string="Start / End Break">
                 <group>
                     <group colspan="4">
-                        <field name="on_break" invisible="1" />
+                        <field name="break_start_time" invisible="1" />
                         <field name="last_attendance_id" invisible="1" />
                         <field name="attendance_state" invisible="1" />
                         <field
@@ -26,20 +26,20 @@
                         <field name="start_time" />
                         <field
                             name="end_time"
-                            attrs="{'required': [('on_break', '!=', False)], 'invisible': [('on_break', '=', False)]}"
+                            attrs="{'required': [('break_start_time', '!=', False)], 'invisible': [('break_start_time', '=', False)]}"
                         />
                     </group>
                 </group>
                 <footer>
                     <button
-                        attrs="{'invisible': [('on_break', '!=', False)]}"
+                        attrs="{'invisible': [('break_start_time', '!=', False)]}"
                         string="Start Break"
                         name="action_start_break"
                         type="object"
                         class="oe_highlight"
                     />
                     <button
-                        attrs="{'invisible': [('on_break', '=', False)]}"
+                        attrs="{'invisible': [('break_start_time', '=', False)]}"
                         string="End Break"
                         name="action_end_break"
                         type="object"

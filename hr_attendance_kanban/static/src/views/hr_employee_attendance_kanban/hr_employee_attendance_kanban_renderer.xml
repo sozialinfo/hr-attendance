@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t
+        t-name="hr_attendance_kanban.HrEmployeeAttendanceKanbanRenderer"
+        t-inherit="web.KanbanRenderer"
+        t-inherit-mode="primary"
+        owl="1"
+    >
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="class" add="o_attendance_kanban_view" separator=" " />
+        </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="after">
+            <EmployeeInspector t-props="getEmployeeInspectorProps()" />
+        </xpath>
+    </t>
+</templates>

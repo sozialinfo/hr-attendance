@@ -45,8 +45,8 @@ class HrEmployeePublic(models.Model):
         help="Technical field to see if the current user is the user of the record.",
     )
 
-    on_break = fields.Datetime(
-        related="employee_id.on_break",
+    break_start_time = fields.Datetime(
+        related="employee_id.break_start_time",
         readonly=True,
         groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
     )

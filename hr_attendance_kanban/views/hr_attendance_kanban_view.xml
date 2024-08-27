@@ -19,6 +19,7 @@
                 <field name="id" />
                 <field name="user_id" />
                 <field name="user_partner_id" />
+                <field name="is_cur_user" />
                 <field name="image_128" />
                 <field name="attendance_type_id" />
                 <field name="last_attendance_id" />
@@ -26,7 +27,7 @@
                 <field name="last_check_out" />
                 <field name="last_attendance_comment" />
                 <field name="attendance_state" />
-                <field name="on_break" />
+                <field name="break_start_time" />
                 <progressbar field="attendance_type_id" colors='{}' />
                 <templates>
                     <t t-name="kanban-box">
@@ -43,7 +44,7 @@
 
                             <div
                                 class="ribbon ribbon-top-right"
-                                attrs="{'invisible': [('on_break', '=', False)]}"
+                                attrs="{'invisible': [('break_start_time', '=', False)]}"
                             >
                                 <span class="bg-odoo">On Break</span>
                             </div>
@@ -73,18 +74,40 @@
                                     <div class="oe_kanban_bottom_left" />
                                     <div class="oe_kanban_bottom_right">
                                         <button
-                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.on_break.raw_value == false"
+                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value == false"
                                             class="btn o_kanban_pause_button fa fa-pause-circle"
                                             title="Start Break"
                                             name="action_break_wizard"
                                             type="object"
+                                            groups="hr_attendance.group_hr_attendance_user"
                                         />
                                         <button
-                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.on_break.raw_value != false"
+                                            t-if="record.attendance_state.raw_value == 'checked_in'
+                                             and record.break_start_time.raw_value == false
+                                             and record.user_id.raw_value == context.uid"
+                                            class="btn o_kanban_pause_button fa fa-pause-circle"
+                                            title="Start Break"
+                                            name="action_break_wizard"
+                                            type="object"
+                                            groups="!hr_attendance.group_hr_attendance_user"
+                                        />
+                                        <button
+                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value != false"
                                             class="btn o_kanban_play_button fa fa-play-circle"
                                             title="End Break"
                                             name="action_break_wizard"
                                             type="object"
+                                            groups="hr_attendance.group_hr_attendance_user"
+                                        />
+                                        <button
+                                            t-if="record.attendance_state.raw_value == 'checked_in'
+                                             and record.break_start_time.raw_value != false
+                                             and record.user_id.raw_value == context.uid"
+                                            class="btn o_kanban_play_button fa fa-play-circle"
+                                            title="End Break"
+                                            name="action_break_wizard"
+                                            type="object"
+                                            groups="!hr_attendance.group_hr_attendance_user"
                                         />
                                     </div>
                                 </div>
@@ -112,7 +135,7 @@
                 <filter
                     name="filter_on_break"
                     string="On Break"
-                    domain="[('on_break', '!=', False)]"
+                    domain="[('break_start_time', '!=', False)]"
                 />
                 <separator />
             </xpath>
