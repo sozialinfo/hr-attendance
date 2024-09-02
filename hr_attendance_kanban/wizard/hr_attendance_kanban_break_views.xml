@@ -26,6 +26,7 @@
                         <field name="start_time" />
                         <field
                             name="end_time"
+                            default_focus="1"
                             attrs="{'required': [('break_start_time', '!=', False)], 'invisible': [('break_start_time', '=', False)]}"
                         />
                     </group>
