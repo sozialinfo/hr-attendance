@@ -16,6 +16,7 @@ class HrAttendanceType(models.Model):
         help="Represents a lane in the Attendance Kanban Board",
         required=True,
         index=True,
+        translate=True,
     )
     absent = fields.Boolean(
         help=(

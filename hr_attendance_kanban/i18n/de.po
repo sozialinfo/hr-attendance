@@ -4,48 +4,45 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0+e-20241108\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-09 05:59+0000\n"
-"PO-Revision-Date: 2024-07-09 08:45+0200\n"
+"POT-Creation-Date: 2024-11-17 03:38+0000\n"
+"PO-Revision-Date: 2024-11-17 03:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: de_CH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_attendance_kanban
 #. odoo-python
 #: code:addons/hr_attendance_kanban/wizard/hr_attendance_kanban_wizard.py:0
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "Die \"Check Out\" Zeit kann nicht vor der \"Check In\" Zeit liegen."
+msgstr ""
+
+#. module: hr_attendance_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
+msgid "<i class=\"fa fa-coffee mt-1 me-1\" title=\"On Break\"/>"
+msgstr ""
+
+#. module: hr_attendance_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
+msgid "<i class=\"fa fa-sign-in mt-1 me-1\" title=\"Checked In\"/>"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
 msgid "<span class=\"bg-odoo\">On Break</span>"
-msgstr "<span class=\"bg-odoo\">Pause</span>"
-
-#. module: hr_attendance_kanban
-#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_wizard_form
-msgid ""
-"<strong>\n"
-"                                    hours\n"
-"                                </strong>"
 msgstr ""
-"<strong>\n"
-"                                    Stunden\n"
-"                                </strong>"
 
 #. module: hr_attendance_kanban
 #. odoo-python
 #: code:addons/hr_attendance_kanban/models/hr_employee_public.py:0
 #, python-format
 msgid "A valid employee must be selected to check in / out."
-msgstr "Für Check In / Check Out bitte einen Mitarbeiter auswählen."
+msgstr ""
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -53,8 +50,6 @@ msgstr "Für Check In / Check Out bitte einen Mitarbeiter auswählen."
 #, python-format
 msgid "A valid employee must be selected to go on a break."
 msgstr ""
-"Um eine Pause zu aktivieren oder zu deaktivieren, bitte einen Mitarbeiter "
-"auswählen."
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__absent
@@ -70,7 +65,7 @@ msgstr "Anwesenheit"
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__attendance_state
 msgid "Attendance Status"
-msgstr "Anwesenheitsstatus"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model,name:hr_attendance_kanban.model_hr_attendance_type
@@ -89,16 +84,28 @@ msgid "Attendance Types"
 msgstr "Anwesenheitsarten"
 
 #. module: hr_attendance_kanban
-#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance__break_time
-#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__break_time
-msgid "Break Time"
-msgstr "Pausen"
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance__break_start_time
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break__break_start_time
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__break_start_time
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee__break_start_time
+#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee_public__break_start_time
+msgid "Break Start Time"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_break_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_wizard_form
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr ""
+
+#. module: hr_attendance_kanban
+#. odoo-python
+#: code:addons/hr_attendance_kanban/wizard/hr_attendance_kanban_wizard.py:0
+#, python-format
+msgid ""
+"Cannot perform check out on {empl_name} while they are on break. Please end "
+"the break first."
+msgstr ""
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -109,9 +116,6 @@ msgid ""
 "in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
-"Das Check Out für  {empl_name} konnte nicht erfolgen, da das entsprechende "
-"Check In nicht gefunden wurde. Eventuell wurde der Eintrag manuell durch "
-"einen HR-Verantwortlichen geändert."
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -120,15 +124,13 @@ msgstr ""
 msgid ""
 "Cannot perform check out on {empl_name}, employee is already checked out."
 msgstr ""
-"Das Check Out für {empl_name} ist nicht möglich, da der Mitarbeiter bereits "
-"ausgecheckt ist."
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee_public__last_check_in
 #: model:ir.model.fields.selection,name:hr_attendance_kanban.selection__hr_attendance_kanban_wizard__check_in_mode__check_in
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_wizard_form
 msgid "Check In"
-msgstr "Check In"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #. odoo-javascript
@@ -137,19 +139,19 @@ msgstr "Check In"
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_wizard_form
 #, python-format
 msgid "Check In / Check Out"
-msgstr "Check In / Check Out"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__check_in_mode
 msgid "Check In Mode"
-msgstr "Check In Modus"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee_public__last_check_out
 #: model:ir.model.fields.selection,name:hr_attendance_kanban.selection__hr_attendance_kanban_wizard__check_in_mode__check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_wizard_form
 msgid "Check Out"
-msgstr "Check Out"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance__comment
@@ -181,7 +183,7 @@ msgstr "Erstellt am"
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_search
 msgid "Current User"
-msgstr "Aktueller Benutzer"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_type__absent
@@ -202,17 +204,11 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: hr_attendance_kanban
-#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance__break_time
-#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_kanban_wizard__break_time
-msgid "Duration of the break in hours"
-msgstr "Pausendauer in Stunden"
-
-#. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__edit_check_in
 #: model:ir.model.fields.selection,name:hr_attendance_kanban.selection__hr_attendance_kanban_wizard__check_in_mode__edit_check_in
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_wizard_form
 msgid "Edit Check In"
-msgstr "Check In ändern"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model,name:hr_attendance_kanban.model_hr_employee
@@ -223,14 +219,26 @@ msgstr "Mitarbeiter"
 
 #. module: hr_attendance_kanban
 #. odoo-python
+#: code:addons/hr_attendance_kanban/models/hr_attendance.py:0
+#, python-format
+msgid "Employee cannot start a break before checking in."
+msgstr ""
+
+#. module: hr_attendance_kanban
+#. odoo-python
+#: code:addons/hr_attendance_kanban/models/hr_attendance.py:0
+#, python-format
+msgid "Employee cannot start a break while checked out."
+msgstr ""
+
+#. module: hr_attendance_kanban
+#. odoo-python
 #: code:addons/hr_attendance_kanban/models/hr_employee_public.py:0
 #, python-format
 msgid ""
 "Employee is already checked in, employee must be moved to an absent "
 "attendance type to check out."
 msgstr ""
-"Der Mitarbeiter ist bereits eingecheckt. Bitte Mitarbeiter auf \"Abwesend\" "
-"setzen, um auszuchecken."
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -240,15 +248,13 @@ msgid ""
 "Employee is already checked out, employee must be moved to a non-absent "
 "attendance type to check in."
 msgstr ""
-"Der Mitarbeiter ist bereits ausgecheckt. Bitte Mitarbeiter auf einen "
-"anderen Status als \"Abwesend\" setzen, um einzuchecken."
 
 #. module: hr_attendance_kanban
 #. odoo-python
 #: code:addons/hr_attendance_kanban/models/hr_attendance.py:0
 #, python-format
-msgid "Employee is not on break."
-msgstr "Der Mitarbeiter ist nicht in der Pause."
+msgid "Employee is already checked out."
+msgstr ""
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -256,87 +262,82 @@ msgstr "Der Mitarbeiter ist nicht in der Pause."
 #, python-format
 msgid "Employee must be moved to a valid attendance type."
 msgstr ""
-"Der Mitarbeiter muss auf eine gültige Anwesenheitsart verschoben werden."
 
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
 msgid "Employee's Name"
-msgstr "Name des Mitarbeiters"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.actions.act_window,name:hr_attendance_kanban.action_hr_attendance_employee_kanban
 #: model:ir.ui.menu,name:hr_attendance_kanban.menu_hr_attendance_employee_kanban
 msgid "Employees Kanban"
-msgstr "Anwesenheits-Kanban"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_break_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
 msgid "End Break"
-msgstr "Pause beenden"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break__end_time
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__end_time
 msgid "End Time"
-msgstr "Schlusszeit"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__fold
 msgid "Folded in Kanban"
-msgstr "In Kanban eingeklappt"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_kanban_wizard__edit_check_in
 msgid ""
-"Helper field passed in context to allow for editing of employee's "
-"attendance record."
+"Helper field passed in context to allow for editing of employee's attendance"
+" record."
 msgstr ""
-"Hilfsfeld, das im Kontext übergeben wird, um die Bearbeitung der "
-"Anwesenheit des Mitarbeiters zu ermöglichen."
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_kanban_wizard__manual_mode
 msgid ""
-"Helper field passed in context to allow for manual check in of employee "
-"when not dragged from kanban."
+"Helper field passed in context to allow for manual check in of employee when"
+" not dragged from kanban."
 msgstr ""
-"Hilfsfeld, das im Kontext übergeben wird, um ein manuelles Einchecken des "
-"Mitarbeiters zu ermöglichen, wenn er nicht aus dem Kanban gezogen wird."
 
 #. module: hr_attendance_kanban
 #: model:ir.model,name:hr_attendance_kanban.model_hr_attendance_kanban_break
 msgid "Hr Attendance Kanban Break"
-msgstr "Mitarbeiter-Kanban Pause"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model,name:hr_attendance_kanban.model_hr_attendance_kanban_wizard
 msgid "Hr Attendance Kanban Wizard"
-msgstr "Mitarbeiter-Kanban Wizard"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break__id
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__id
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee_public__is_cur_user
 msgid "Is Current User"
-msgstr "Entspricht dem aktuellen Benutzer"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee__is_kanban_attendance
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee_public__is_kanban_attendance
 msgid "Kanban Attendance"
-msgstr "Mitarbeiter-Kanban"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break__last_attendance_id
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__last_attendance_id
 msgid "Last Attendance"
-msgstr "Zuletzt anwesend"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break____last_update
@@ -362,31 +363,26 @@ msgstr "Zuletzt geändert am"
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__manual_mode
 msgid "Manual Mode"
-msgstr "Manueller Modus"
+msgstr ""
 
 #. module: hr_attendance_kanban
-#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance__on_break
-#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break__on_break
-#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__on_break
-#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee__on_break
-#: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_employee_public__on_break
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_search
 msgid "On Break"
-msgstr "Pause"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #. odoo-python
 #: code:addons/hr_attendance_kanban/models/hr_employee_public.py:0
 #, python-format
 msgid "Only Officers can manage other employees attendances."
-msgstr "Nur Admin können die Anwesenheitseinträge anderer Mitarbeiter ändern."
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance__comment
 #: model:ir.model.fields,help:hr_attendance_kanban.field_hr_employee__last_attendance_comment
 #: model:ir.model.fields,help:hr_attendance_kanban.field_hr_employee_public__last_attendance_comment
 msgid "Optional comment for attendance"
-msgstr "Kommentar (optional)"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model,name:hr_attendance_kanban.model_hr_employee_public
@@ -401,7 +397,7 @@ msgstr "Repräsentiert eine Spalte im Mitarbeiter-Kanban"
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance__attendance_type_id
 msgid "Represents the type of employee attendance"
-msgstr "Repräsentiert die Anwesenheitsart"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__sequence
@@ -412,42 +408,35 @@ msgstr "Reihenfolge"
 #: model:ir.actions.act_window,name:hr_attendance_kanban.hr_attendance_kanban_break_action
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_break_form
 msgid "Start / End Break"
-msgstr "Beginn / Ende der Pause"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.hr_attendance_kanban_break_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
 msgid "Start Break"
-msgstr "Pause beginnen"
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break__start_time
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__start_time
 msgid "Start Time"
-msgstr "Startzeit"
+msgstr ""
 
 #. module: hr_attendance_kanban
-#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance__on_break
-#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_kanban_break__on_break
-#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_kanban_wizard__on_break
-#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_employee__on_break
-#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_employee_public__on_break
+#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance__break_start_time
+#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_kanban_break__break_start_time
+#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_attendance_kanban_wizard__break_start_time
+#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_employee__break_start_time
+#: model:ir.model.fields,help:hr_attendance_kanban.field_hr_employee_public__break_start_time
 msgid ""
 "Start time of the break. This is a technical field used to calculate break "
-"time."
+"time and determine if an attendance is on break."
 msgstr ""
-"Startzeit der Pause. Dies ist ein technisches Feld, um die Pausenzeit zu "
-"berechnen."
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,help:hr_attendance_kanban.field_hr_employee_public__is_cur_user
 msgid "Technical field to see if the current user is the user of the record."
-msgstr "Technisches Feld, um den aktuellen Benutzer des Eintrags zu sehen."
-
-#. module: hr_attendance_kanban
-#: model:ir.model.constraint,message:hr_attendance_kanban.constraint_hr_attendance_check_break_time_positive
-msgid "The break time cannot be negative."
-msgstr "Die Pausenzeit kann nicht negativ sein."
+msgstr ""
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__name
@@ -462,8 +451,6 @@ msgid ""
 "Unable to check in {empl_name} earlier than their previous attendance "
 "started."
 msgstr ""
-"Der Mitarbeiter {empl_name} kann nicht früher als der letzte "
-"Anwesenheitseintrag eingecheckt werden."
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -474,9 +461,6 @@ msgid ""
 "exactly one Attendance Type with 'absent' checked, because it is used to "
 "represents absent employees."
 msgstr ""
-"Sie können die als \"abwesend\" markierte Anwesenheitsart nicht löschen. Es "
-"muss genau eine Anwesenheitsart mit der Markierung \"abwesend\" vorhanden "
-"sein, da sie zur Darstellung abwesender Mitarbeiter verwendet wird."
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -485,11 +469,26 @@ msgstr ""
 msgid ""
 "You cannot uncheck this Attendance Type as 'absent'. There needs to be "
 "exactly one Attendance Type with 'absent' checked, because it is used to "
-"represents absent employees. You can however mark another Attendance Type "
-"as 'absent' and then the flag for this record will automatically be removed."
+"represents absent employees. You can however mark another Attendance Type as"
+" 'absent' and then the flag for this record will automatically be removed."
 msgstr ""
-"Sie können diese Anwesenheitsart nicht als \"abwesend\" abwählen. Es muss "
-"genau eine Anwesenheitsart mit der Markierung \"abwesend\" vorhanden sein, "
-"da sie zur Darstellung abwesender Mitarbeiter verwendet wird. Sie können "
-"jedoch eine andere Anwesenheitsart als \"abwesend\" markieren, dann wird "
-"das Kennzeichen für diesen Datensatz automatisch entfernt."
+
+#. module: hr_attendance_kanban
+#: model:hr.attendance.type,name:hr_attendance_kanban.hr_attendance_type_homeoffice
+msgid "🏠 Home-Office"
+msgstr ""
+
+#. module: hr_attendance_kanban
+#: model:hr.attendance.type,name:hr_attendance_kanban.hr_attendance_type_office
+msgid "🏢 Office"
+msgstr ""
+
+#. module: hr_attendance_kanban
+#: model:hr.attendance.type,name:hr_attendance_kanban.hr_attendance_type_absent
+msgid "👋 Absent"
+msgstr ""
+
+#. module: hr_attendance_kanban
+#: model:hr.attendance.type,name:hr_attendance_kanban.hr_attendance_type_travelling
+msgid "🚋 Travelling"
+msgstr ""
