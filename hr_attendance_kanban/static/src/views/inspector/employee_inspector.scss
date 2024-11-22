@@ -4,10 +4,9 @@
 .o_employee_inspector {
     flex: 0 0 200px;
     overflow: auto;
-    background-color: #ffffff;
+    background-color: $o-view-background-color;
 
     .o_employee_inspector_info {
-        border-top: 1px solid #4c4c4c;
         padding: $o-horizontal-padding * 0.5 $o-horizontal-padding * 0.5
             $o-horizontal-padding * 0.5;
     }

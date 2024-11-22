@@ -37,6 +37,7 @@
                         string="Start Break"
                         name="action_start_break"
                         type="object"
+                        data-hotkey="s"
                         class="oe_highlight"
                     />
                     <button
@@ -44,9 +45,15 @@
                         string="End Break"
                         name="action_end_break"
                         type="object"
+                        data-hotkey="s"
                         class="oe_highlight"
                     />
-                    <button string="Cancel" class="oe_link" special="cancel" />
+                    <button
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                        data-hotkey="z"
+                    />
                 </footer>
             </form>
         </field>

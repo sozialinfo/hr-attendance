@@ -62,11 +62,10 @@ class HrAttendanceKanbanWizard(models.Model):
     )
     def _compute_start_time(self):
         """Computes the default start time for check in/out wizard rounded
-        down to the closest 5 minutes. If employee is checked in, get the checked in
+        down to the closest minute. If employee is checked in, get the checked in
         time for start time."""
         time_now = fields.Datetime.now()
         time_now_rounded = time_now - datetime.timedelta(
-            minutes=time_now.minute % 5,
             seconds=time_now.second,
             microseconds=time_now.microsecond,
         )
@@ -89,10 +88,9 @@ class HrAttendanceKanbanWizard(models.Model):
     )
     def _compute_end_time(self):
         """Computes the end time for check in/out wizard rounded
-        down to the closest 5 minutes when checking out."""
+        down to the closest minute when checking out."""
         time_now = fields.Datetime.now()
         time_now_rounded = time_now - datetime.timedelta(
-            minutes=time_now.minute % 5,
             seconds=time_now.second,
             microseconds=time_now.microsecond,
         )

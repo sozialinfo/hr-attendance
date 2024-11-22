@@ -51,6 +51,7 @@
                         string="Edit Check In"
                         name="action_edit"
                         type="object"
+                        data-hotkey="s"
                         class="oe_highlight"
                     />
                     <button
@@ -58,6 +59,7 @@
                         string="Check In"
                         name="action_change"
                         type="object"
+                        data-hotkey="s"
                         class="oe_highlight"
                     />
                     <button
@@ -65,9 +67,15 @@
                         string="Check Out"
                         name="action_change"
                         type="object"
+                        data-hotkey="s"
                         class="oe_highlight"
                     />
-                    <button string="Cancel" class="oe_link" special="cancel" />
+                    <button
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                        data-hotkey="z"
+                    />
                 </footer>
             </form>
         </field>

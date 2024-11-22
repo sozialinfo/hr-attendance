@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
+import {TimeOffCard} from "@hr_holidays/dashboard/time_off_card";
+
 import fieldUtils from "web.field_utils";
 import {session} from "@web/session";
-import {TimeOffCard} from "@hr_holidays/dashboard/time_off_card";
 import {useService} from "@web/core/utils/hooks";
 
 const {Component, useState, onWillStart} = owl;

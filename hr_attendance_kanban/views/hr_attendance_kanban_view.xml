@@ -61,14 +61,32 @@
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <ul>
-                                       <li
+                                        <li
                                             t-if="record.attendance_state.raw_value != 'checked_out'"
-                                        ><field name="last_check_in" /></li>
-                                       <li
+                                        >
+                                            <i
+                                                class="fa fa-sign-in mt-1 me-1"
+                                                title="Checked In"
+                                            />
+                                            <field name="last_check_in" />
+                                        </li>
+                                        <li
+                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value != false"
+                                        >
+                                            <i
+                                                class="fa fa-coffee mt-1 me-1"
+                                                title="On Break"
+                                            />
+                                            <field name="break_start_time" />
+                                        </li>
+
+                                        <li
                                             t-if="record.attendance_state.raw_value != 'checked_out'"
                                             class="o_text_overflow"
-                                        ><field name="last_attendance_comment" /></li>
-                                   </ul>
+                                        >
+                                            <field name="last_attendance_comment" />
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left" />
@@ -139,7 +157,7 @@
                 />
                 <separator />
             </xpath>
-         </field>
+        </field>
     </record>
 
     <record id="action_hr_attendance_employee_kanban" model="ir.actions.act_window">

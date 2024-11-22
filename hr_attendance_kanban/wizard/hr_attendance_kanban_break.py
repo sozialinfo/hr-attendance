@@ -38,11 +38,10 @@ class HrAttendanceKanbanBreak(models.Model):
     )
     def _compute_start_time(self):
         """Computes the default start time for break wizard rounded
-        down to the closest 5 minutes. If employee is on break, get the break start in
+        down to the closest minute. If employee is on break, get the break start in
         time for start time."""
         time_now = fields.Datetime.now()
         time_now_rounded = time_now - datetime.timedelta(
-            minutes=time_now.minute % 5,
             seconds=time_now.second,
             microseconds=time_now.microsecond,
         )
@@ -63,10 +62,9 @@ class HrAttendanceKanbanBreak(models.Model):
     )
     def _compute_end_time(self):
         """Computes the end time for break wizard rounded
-        down to the closest 5 minutes when ending break."""
+        down to the closest minute when ending break."""
         time_now = fields.Datetime.now()
         time_now_rounded = time_now - datetime.timedelta(
-            minutes=time_now.minute % 5,
             seconds=time_now.second,
             microseconds=time_now.microsecond,
         )

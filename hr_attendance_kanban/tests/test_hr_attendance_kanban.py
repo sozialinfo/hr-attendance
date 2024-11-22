@@ -4,11 +4,13 @@
 from datetime import datetime, timedelta
 
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import common, new_test_user, users
+from odoo.tests import new_test_user, users
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 
 
-class TestHrAttendanceKanban(common.TransactionCase):
+@tagged("post_install", "-at_install", "hr_attendance_kanban")
+class TestHrAttendanceKanban(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -261,3 +263,99 @@ class TestHrAttendanceKanban(common.TransactionCase):
         self.assertFalse(public_employee.break_start_time)
         self.assertEqual(first_attendance.worked_hours, 0.5)
         self.assertEqual(public_employee.last_attendance_id.worked_hours, 7.0)
+
+    @users("test-user")
+    def test_start_break_when_already_on_break(self):
+        """Test employee user cannot start a break when already on a break"""
+        public_employee = self.env["hr.employee.public"].browse(self.employee.ids)
+        self.env["hr.attendance.kanban.wizard"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "next_attendance_type_id": self.att_type_office.id,
+                "start_time": datetime.now().strftime(DF),
+                "comment": self.att_comment,
+            }
+        ).action_change()
+        self.env["hr.attendance.kanban.break"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "start_time": (datetime.now() + timedelta(minutes=30)).strftime(DF),
+            }
+        ).action_start_break()
+        with self.assertRaises(UserError):
+            self.env["hr.attendance.kanban.break"].create(
+                {
+                    "public_employee_id": public_employee.id,
+                    "start_time": (datetime.now() + timedelta(minutes=60)).strftime(DF),
+                }
+            ).action_start_break()
+
+    @users("test-user")
+    def test_end_break_when_not_on_break(self):
+        """Test employee user cannot end a break when not on a break"""
+        public_employee = self.env["hr.employee.public"].browse(self.employee.ids)
+        self.env["hr.attendance.kanban.wizard"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "next_attendance_type_id": self.att_type_office.id,
+                "start_time": datetime.now().strftime(DF),
+                "comment": self.att_comment,
+            }
+        ).action_change()
+        with self.assertRaises(UserError):
+            self.env["hr.attendance.kanban.break"].create(
+                {
+                    "public_employee_id": public_employee.id,
+                    "end_time": (datetime.now() + timedelta(minutes=30)).strftime(DF),
+                }
+            ).action_end_break()
+
+    @users("test-user")
+    def test_check_in_when_already_checked_in(self):
+        """Test employee user cannot check in when already checked in"""
+        public_employee = self.env["hr.employee.public"].browse(self.employee.ids)
+        self.env["hr.attendance.kanban.wizard"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "next_attendance_type_id": self.att_type_office.id,
+                "start_time": datetime.now().strftime(DF),
+                "comment": self.att_comment,
+            }
+        ).action_change()
+        with self.assertRaises(UserError):
+            self.env["hr.attendance.kanban.wizard"].create(
+                {
+                    "public_employee_id": public_employee.id,
+                    "next_attendance_type_id": self.att_type_home.id,
+                    "start_time": datetime.now().strftime(DF),
+                    "comment": self.att_comment,
+                }
+            ).action_change()
+
+    @users("test-user")
+    def test_check_out_when_already_checked_out(self):
+        """Test employee user cannot check out when already checked out"""
+        public_employee = self.env["hr.employee.public"].browse(self.employee.ids)
+        self.env["hr.attendance.kanban.wizard"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "next_attendance_type_id": self.att_type_office.id,
+                "start_time": datetime.now().strftime(DF),
+                "comment": self.att_comment,
+            }
+        ).action_change()
+        self.env["hr.attendance.kanban.wizard"].create(
+            {
+                "public_employee_id": public_employee.id,
+                "next_attendance_type_id": self.att_type_absent.id,
+                "end_time": (datetime.now() + timedelta(hours=8)).strftime(DF),
+            }
+        ).action_change()
+        with self.assertRaises(UserError):
+            self.env["hr.attendance.kanban.wizard"].create(
+                {
+                    "public_employee_id": public_employee.id,
+                    "next_attendance_type_id": self.att_type_absent.id,
+                    "end_time": (datetime.now() + timedelta(hours=9)).strftime(DF),
+                }
+            ).action_change()
