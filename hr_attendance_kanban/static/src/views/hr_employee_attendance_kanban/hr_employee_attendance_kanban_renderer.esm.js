@@ -2,8 +2,7 @@
 
 import {EmployeeInspector} from "../inspector/employee_inspector.esm";
 import {KanbanRenderer} from "@web/views/kanban/kanban_renderer";
-
-const {useRef} = owl;
+import {useRef} from "@odoo/owl";
 
 export class HrEmployeeAttendanceKanbanRenderer extends KanbanRenderer {
     setup() {
