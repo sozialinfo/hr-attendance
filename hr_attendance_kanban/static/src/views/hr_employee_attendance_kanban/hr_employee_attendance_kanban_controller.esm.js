@@ -5,10 +5,14 @@ import {launchCheckInWizard} from "@hr_attendance_kanban/views/launch_check_in_w
 
 import {session} from "@web/session";
 import {useService} from "@web/core/utils/hooks";
+import {useSubEnv} from "@odoo/owl";
 
 export class HrEmployeeAttendanceKanbanController extends KanbanController {
     setup() {
         super.setup(...arguments);
+        useSubEnv({
+            model: this.model,
+        });
         this.action = useService("action");
         this.orm = useService("orm");
     }
@@ -35,6 +39,6 @@ export class HrEmployeeAttendanceKanbanController extends KanbanController {
             return;
         }
         // Reload model to display attendance change
-        this.model.load();
+        this.model.notify();
     }
 }
