@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
+import {Component, onWillStart, useState} from "@odoo/owl";
+import {useBus, useService} from "@web/core/utils/hooks";
 import {TimeOffCard} from "@hr_holidays/dashboard/time_off_card";
-
 import fieldUtils from "web.field_utils";
 import {session} from "@web/session";
-import {useService} from "@web/core/utils/hooks";
-
-const {Component, useState, onWillStart} = owl;
 
 export class EmployeeInspector extends Component {
     setup() {
@@ -15,6 +13,11 @@ export class EmployeeInspector extends Component {
             employee: {},
             holidays: [],
         });
+
+        useBus(this.env.model, "update", async () => {
+            await this.getEmployeeDays();
+        });
+
         onWillStart(async () => {
             await this.getEmployeeDays();
         });
