@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -370,23 +369,25 @@ ul.auto-toc {
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !! source digest: sha256:c33b99f2d41c72315885f1bdb45af0f13464296b0d46e31ee74f6ed759f786dd
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html"><img alt="License: LGPL-3" src="https://img.shields.io/badge/licence-LGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/hr-attendance/tree/16.0/hr_attendance_kanban"><img alt="OCA/hr-attendance" src="https://img.shields.io/badge/github-OCA%2Fhr--attendance-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/hr-attendance-16-0/hr-attendance-16-0-hr_attendance_kanban"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/hr-attendance&amp;target_branch=16.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
-<p>This module allows employees to check-in or check-out by moving their avatar on a kanban board.</p>
-<p>The kanban board also shows a quick overview of all employees, grouped by attendance type,
-such as:</p>
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html"><img alt="License: LGPL-3" src="https://img.shields.io/badge/licence-LGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/hr-attendance/tree/18.0/hr_attendance_kanban"><img alt="OCA/hr-attendance" src="https://img.shields.io/badge/github-OCA%2Fhr--attendance-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/hr-attendance-18-0/hr-attendance-18-0-hr_attendance_kanban"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/hr-attendance&amp;target_branch=18.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p>This module allows employees to check-in or check-out by moving their
+avatar on a kanban board.</p>
+<p>The kanban board also shows a quick overview of all employees, grouped
+by attendance type, such as:</p>
 <ul class="simple">
 <li>👋 Absent</li>
 <li>🏢 Office</li>
 <li>🏠 Home-Office</li>
 <li>🚋 Travelling</li>
 </ul>
-<p>On the right side of the kanban board, you can see certain key figures for the employee
-such as overtime hours and remaining vacation time.</p>
-<p>This module also adds the ability for employees to go on a break by using the kanban board.
-Upon returning, they can end the break which will <strong>end</strong> the current attendance at the
-start time of the break and it will <strong>start</strong> a new attendance from the end time of the break.
-This will result in the employee having multiple attendance records for the day and the time
-spent on break is the delta between these attendances.</p>
+<p>On the right side of the kanban board, you can see certain key figures
+for the employee such as overtime hours and remaining vacation time.</p>
+<p>This module also adds the ability for employees to go on a break by
+using the kanban board. Upon returning, they can end the break which
+will <strong>end</strong> the current attendance at the start time of the break and
+it will <strong>start</strong> a new attendance from the end time of the break. This
+will result in the employee having multiple attendance records for the
+day and the time spent on break is the delta between these attendances.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -411,10 +412,12 @@ spent on break is the delta between these attendances.</p>
 <p>Using the attendance kanban:</p>
 <ol class="arabic simple">
 <li>Go to <em>Attendances &gt; Employees Kanban</em></li>
-<li>Check in by dragging and dropping the employee card to the desired attendance type</li>
+<li>Check in by dragging and dropping the employee card to the desired
+attendance type</li>
 <li>Start a break by pressing the pause icon on the employee card</li>
 <li>End a break by pressing the play icon on the employee card</li>
-<li>Check out by dragging and dropping the employee card to the absent attendance type</li>
+<li>Check out by dragging and dropping the employee card to the absent
+attendance type</li>
 </ol>
 </div>
 <div class="section" id="bug-tracker">
@@ -422,7 +425,7 @@ spent on break is the delta between these attendances.</p>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/hr-attendance/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-<a class="reference external" href="https://github.com/OCA/hr-attendance/issues/new?body=module:%20hr_attendance_kanban%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<a class="reference external" href="https://github.com/OCA/hr-attendance/issues/new?body=module:%20hr_attendance_kanban%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
@@ -455,7 +458,7 @@ mission is to support the collaborative development of Odoo features and
 promote its widespread use.</p>
 <p>Current <a class="reference external" href="https://odoo-community.org/page/maintainer-role">maintainer</a>:</p>
 <p><a class="reference external image-reference" href="https://github.com/miikanissi"><img alt="miikanissi" src="https://github.com/miikanissi.png?size=40px" /></a></p>
-<p>This module is part of the <a class="reference external" href="https://github.com/OCA/hr-attendance/tree/16.0/hr_attendance_kanban">OCA/hr-attendance</a> project on GitHub.</p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/hr-attendance/tree/18.0/hr_attendance_kanban">OCA/hr-attendance</a> project on GitHub.</p>
 <p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
 </div>
 </div>

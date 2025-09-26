@@ -17,35 +17,37 @@ HR Kanban Attendance
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fhr--attendance-lightgray.png?logo=github
-    :target: https://github.com/OCA/hr-attendance/tree/16.0/hr_attendance_kanban
+    :target: https://github.com/OCA/hr-attendance/tree/18.0/hr_attendance_kanban
     :alt: OCA/hr-attendance
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/hr-attendance-16-0/hr-attendance-16-0-hr_attendance_kanban
+    :target: https://translation.odoo-community.org/projects/hr-attendance-18-0/hr-attendance-18-0-hr_attendance_kanban
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-attendance&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/hr-attendance&target_branch=18.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module allows employees to check-in or check-out by moving their avatar on a kanban board.
+This module allows employees to check-in or check-out by moving their
+avatar on a kanban board.
 
-The kanban board also shows a quick overview of all employees, grouped by attendance type,
-such as:
+The kanban board also shows a quick overview of all employees, grouped
+by attendance type, such as:
 
-* 👋 Absent
-* 🏢 Office
-* 🏠 Home-Office
-* 🚋 Travelling
+-  👋 Absent
+-  🏢 Office
+-  🏠 Home-Office
+-  🚋 Travelling
 
-On the right side of the kanban board, you can see certain key figures for the employee
-such as overtime hours and remaining vacation time.
+On the right side of the kanban board, you can see certain key figures
+for the employee such as overtime hours and remaining vacation time.
 
-This module also adds the ability for employees to go on a break by using the kanban board.
-Upon returning, they can end the break which will **end** the current attendance at the
-start time of the break and it will **start** a new attendance from the end time of the break.
-This will result in the employee having multiple attendance records for the day and the time
-spent on break is the delta between these attendances.
+This module also adds the ability for employees to go on a break by
+using the kanban board. Upon returning, they can end the break which
+will **end** the current attendance at the start time of the break and
+it will **start** a new attendance from the end time of the break. This
+will result in the employee having multiple attendance records for the
+day and the time spent on break is the delta between these attendances.
 
 **Table of contents**
 
@@ -57,17 +59,19 @@ Usage
 
 Setting up the attendance kanban configuration:
 
-#. Go to *Attendances > Configuration > Attendance Types*
-#. Adjust the attendance types to your needs
-#. The employees can use *Attendances > Employees Kanban*
+1. Go to *Attendances > Configuration > Attendance Types*
+2. Adjust the attendance types to your needs
+3. The employees can use *Attendances > Employees Kanban*
 
 Using the attendance kanban:
 
-#. Go to *Attendances > Employees Kanban*
-#. Check in by dragging and dropping the employee card to the desired attendance type
-#. Start a break by pressing the pause icon on the employee card
-#. End a break by pressing the play icon on the employee card
-#. Check out by dragging and dropping the employee card to the absent attendance type
+1. Go to *Attendances > Employees Kanban*
+2. Check in by dragging and dropping the employee card to the desired
+   attendance type
+3. Start a break by pressing the pause icon on the employee card
+4. End a break by pressing the play icon on the employee card
+5. Check out by dragging and dropping the employee card to the absent
+   attendance type
 
 Bug Tracker
 ===========
@@ -75,7 +79,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/hr-attendance/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/hr-attendance/issues/new?body=module:%20hr_attendance_kanban%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/hr-attendance/issues/new?body=module:%20hr_attendance_kanban%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -83,22 +87,22 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Sozialinfo
 * Miika Nissi
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* `Sozialinfo <https://sozialinfo.ch>`_:
+-  `Sozialinfo <https://sozialinfo.ch>`__:
 
-  * David Brühlmeier <david.bruehlmeier@sozialinfo.ch>
+   -  David Brühlmeier <david.bruehlmeier@sozialinfo.ch>
 
-* Miika Nissi <miika@miikanissi.com>
+-  Miika Nissi <miika@miikanissi.com>
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
@@ -118,6 +122,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-miikanissi| 
 
-This module is part of the `OCA/hr-attendance <https://github.com/OCA/hr-attendance/tree/16.0/hr_attendance_kanban>`_ project on GitHub.
+This module is part of the `OCA/hr-attendance <https://github.com/OCA/hr-attendance/tree/18.0/hr_attendance_kanban>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
