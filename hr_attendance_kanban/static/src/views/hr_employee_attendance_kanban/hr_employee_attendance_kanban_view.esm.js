@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {HrEmployeeAttendanceKanbanController} from "@hr_attendance_kanban/views/hr_employee_attendance_kanban/hr_employee_attendance_kanban_controller.esm";
 import {HrEmployeeAttendanceKanbanModel} from "@hr_attendance_kanban/views/hr_employee_attendance_kanban/hr_employee_attendance_kanban_model.esm";
 import {HrEmployeeAttendanceKanbanRenderer} from "@hr_attendance_kanban/views/hr_employee_attendance_kanban/hr_employee_attendance_kanban_renderer.esm";

@@ -15,21 +15,21 @@ class HrEmployee(models.Model):
         inverse="_inverse_attendance_type_id",
         store=True,
         readonly=False,
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user",  # noqa:B950
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
     last_attendance_comment = fields.Char(
         related="last_attendance_id.comment",
         store=True,
-        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
     break_start_time = fields.Datetime(
         related="last_attendance_id.break_start_time",
         store=True,
-        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
     is_kanban_attendance = fields.Boolean(
         string="Kanban Attendance",
-        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
 
     @api.depends(
@@ -65,6 +65,11 @@ class HrEmployee(models.Model):
                 )
 
     @api.model
-    def _read_attendance_type_ids(self, stages, domain, order):
+    def _read_attendance_type_ids(self, stages, domain):
         attendance_type_ids = self.env["hr.attendance.type"].search([])
         return attendance_type_ids
+
+    @api.model
+    def get_contextual_employee_id(self):
+        employee = self._get_contextual_employee()
+        return employee.id if employee else None

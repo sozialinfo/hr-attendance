@@ -27,10 +27,14 @@ class TestHrAttendanceKanban(TransactionCase):
         cls.user = new_test_user(
             cls.env,
             login="test-user",
-            groups="base.group_user,hr_attendance.group_hr_attendance",
+            groups="base.group_user,hr_attendance.group_hr_attendance_own_reader",
         )
         cls.employee = cls.env["hr.employee"].create(
-            {"name": cls.user.login, "user_id": cls.user.id}
+            {
+                "name": cls.user.login,
+                "user_id": cls.user.id,
+                "resource_calendar_id": False,  # avoid working hours constraints
+            }
         )
         cls.user_admin = new_test_user(
             cls.env,

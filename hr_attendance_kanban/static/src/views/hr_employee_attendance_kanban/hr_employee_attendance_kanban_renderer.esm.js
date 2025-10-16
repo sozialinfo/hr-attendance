@@ -1,29 +1,18 @@
-/** @odoo-module **/
-
 import {EmployeeInspector} from "../inspector/employee_inspector.esm";
 import {KanbanRenderer} from "@web/views/kanban/kanban_renderer";
-import {useRef} from "@odoo/owl";
 
 export class HrEmployeeAttendanceKanbanRenderer extends KanbanRenderer {
-    setup() {
-        super.setup();
-        this.root = useRef("root");
-    }
+    static template = "hr_attendance_kanban.HrEmployeeAttendanceKanbanRenderer";
+    static components = {
+        ...KanbanRenderer.components,
+        EmployeeInspector,
+    };
 
     getEmployeeInspectorProps() {
         // Modify any props here
+        const {model} = this.props.list;
         return {
-            selection: this.props.list.selection,
+            employeeId: model.employeeId,
         };
     }
 }
-
-HrEmployeeAttendanceKanbanRenderer.template =
-    "hr_attendance_kanban.HrEmployeeAttendanceKanbanRenderer";
-HrEmployeeAttendanceKanbanRenderer.components = Object.assign(
-    {},
-    KanbanRenderer.components,
-    {
-        EmployeeInspector,
-    }
-);

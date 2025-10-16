@@ -17,26 +17,26 @@ class HrEmployeePublic(models.Model):
         compute="_compute_attendance_type_id",
         store=True,
         readonly=False,
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user",  # noqa:B950
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
     last_attendance_comment = fields.Char(
         related="employee_id.last_attendance_comment",
         readonly=True,
-        groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
     last_check_in = fields.Datetime(
         related="employee_id.last_check_in",
         readonly=True,
-        groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
     last_check_out = fields.Datetime(
         related="employee_id.last_check_out",
         readonly=True,
-        groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
     is_kanban_attendance = fields.Boolean(
         string="Kanban Attendance",
-        groups="hr_attendance.group_hr_attendanc,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
     is_cur_user = fields.Boolean(
         string="Is Current User",
@@ -48,7 +48,7 @@ class HrEmployeePublic(models.Model):
     break_start_time = fields.Datetime(
         related="employee_id.break_start_time",
         readonly=True,
-        groups="hr_attendance.group_hr_attendance,hr.group_hr_user",
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
 
     @api.depends("employee_id.attendance_type_id")
@@ -96,7 +96,7 @@ class HrEmployeePublic(models.Model):
         ]
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         """Override to support ordering on is_cur_user.
 
         Ordering through web client calls search_read with an order parameter set.
@@ -120,10 +120,8 @@ class HrEmployeePublic(models.Model):
         All other search and search_read are left untouched by this override to avoid
         side effects. Search_count is not affected by this override.
         """
-        if count or not order or "is_cur_user" not in order:
-            return super().search(
-                args, offset=offset, limit=limit, order=order, count=count
-            )
+        if not order or "is_cur_user" not in order:
+            return super().search_fetch(domain, field_names, offset, limit, order)
         order_items = [
             order_item.strip().lower()
             for order_item in (order or self._order).split(",")
@@ -131,19 +129,16 @@ class HrEmployeePublic(models.Model):
         user_asc = any("is_cur_user asc" in item for item in order_items)
 
         # Search employees that are the current user.
-        my_employee_domain = expression.AND([[("user_id", "in", [self.env.uid])], args])
+        my_employee_domain = expression.AND(
+            [[("user_id", "in", [self.env.uid])], domain]
+        )
         my_employees_order = ", ".join(
             item for item in order_items if "is_cur_user" not in item
         )
+
         employee_ids = (
             super()
-            .search(
-                my_employee_domain,
-                offset=0,
-                limit=None,
-                order=my_employees_order,
-                count=count,
-            )
+            .search_fetch(my_employee_domain, field_names, order=my_employees_order)
             .ids
         )
 
@@ -173,12 +168,12 @@ class HrEmployeePublic(models.Model):
             item for item in order_items if "is_cur_user" not in item
         )
 
-        other_employee_res = super().search(
-            expression.AND([[("id", "not in", my_employee_ids_skip)], args]),
-            offset=employee_offset,
-            limit=employee_limit,
-            order=employee_order,
-            count=count,
+        other_employee_res = super().search_fetch(
+            expression.AND([[("id", "not in", my_employee_ids_skip)], domain]),
+            field_names,
+            employee_offset,
+            employee_limit,
+            employee_order,
         )
         if user_asc in order_items:
             return other_employee_res + self.browse(my_employee_ids_keep)
@@ -324,19 +319,15 @@ class HrEmployeePublic(models.Model):
         return wizard_action
 
     @api.model
-    def _read_attendance_type_ids(self, stages, domain, order):
+    def _read_attendance_type_ids(self, stages, domain):
         attendance_type_ids = self.env["hr.attendance.type"].search([])
         return attendance_type_ids
-
-    def get_attendance_type_id(self):
-        self.ensure_one()
-        return self.attendance_type_id.id
 
     def check_attendance_access(self):
         """Check if current user has access to modify employees attendances."""
         self.ensure_one()
         if self.env.user != self.user_id and not self.env.user.has_group(
-            "hr_attendance.group_hr_attendance_user"
+            "hr_attendance.group_hr_attendance_officer"
         ):
             raise AccessError(
                 _("Only Officers can manage other employees attendances.")

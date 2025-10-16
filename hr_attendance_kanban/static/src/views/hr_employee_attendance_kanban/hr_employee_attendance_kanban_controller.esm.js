@@ -1,35 +1,13 @@
-/** @odoo-module **/
-
+import {EventBus, useSubEnv} from "@odoo/owl";
 import {KanbanController} from "@web/views/kanban/kanban_controller";
 import {launchCheckInWizard} from "@hr_attendance_kanban/views/launch_check_in_wizard.esm";
 
-import {session} from "@web/session";
-import {useService} from "@web/core/utils/hooks";
-import {useSubEnv} from "@odoo/owl";
-
 export class HrEmployeeAttendanceKanbanController extends KanbanController {
-    setup() {
-        super.setup(...arguments);
-        useSubEnv({
-            model: this.model,
-        });
-        this.action = useService("action");
-        this.orm = useService("orm");
-    }
-
     async checkInOutButtonClicked() {
-        // Attempt to get current users employee record
-        const publicEmployee = await this.orm.searchRead(
-            "hr.employee.public",
-            [["user_id", "=", session.uid]],
-            ["id"],
-            {limit: 1}
-        );
-
         const closed = await launchCheckInWizard(
-            this.model.ormService,
-            this.model.actionService,
-            publicEmployee.length > 0 ? publicEmployee[0].id : false,
+            this.model.orm,
+            this.actionService,
+            this.employeeId > 0 ? this.employeeId : false,
             false,
             true
         );
@@ -38,7 +16,19 @@ export class HrEmployeeAttendanceKanbanController extends KanbanController {
         if (!closed || closed.special) {
             return;
         }
-        // Reload model to display attendance change
-        this.model.notify();
+
+        // Refresh the view to reflect the attendance change
+        this.model.root.load();
+    }
+
+    get employeeId() {
+        return this.model.employeeId;
+    }
+
+    setup() {
+        super.setup(...arguments);
+        useSubEnv({
+            timeOffBus: new EventBus(),
+        });
     }
 }

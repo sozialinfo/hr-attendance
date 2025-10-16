@@ -14,12 +14,12 @@
                             name="public_employee_id"
                             widget="many2one_avatar"
                             readonly="1"
-                            groups="hr_attendance.group_hr_attendance_user"
+                            groups="hr_attendance.group_hr_attendance_officer"
                         />
                         <field
                             name="public_employee_id"
                             widget="many2one_avatar"
-                            groups="!hr_attendance.group_hr_attendance_user"
+                            groups="!hr_attendance.group_hr_attendance_officer"
                             domain="[('user_id','=',uid)]"
                             invisible="1"
                         />
@@ -27,13 +27,14 @@
                         <field
                             name="end_time"
                             default_focus="1"
-                            attrs="{'required': [('break_start_time', '!=', False)], 'invisible': [('break_start_time', '=', False)]}"
+                            required="break_start_time"
+                            invisible="not break_start_time"
                         />
                     </group>
                 </group>
                 <footer>
                     <button
-                        attrs="{'invisible': [('break_start_time', '!=', False)]}"
+                        invisible="break_start_time"
                         string="Start Break"
                         name="action_start_break"
                         type="object"
@@ -41,7 +42,7 @@
                         class="oe_highlight"
                     />
                     <button
-                        attrs="{'invisible': [('break_start_time', '=', False)]}"
+                        invisible="not break_start_time"
                         string="End Break"
                         name="action_end_break"
                         type="object"

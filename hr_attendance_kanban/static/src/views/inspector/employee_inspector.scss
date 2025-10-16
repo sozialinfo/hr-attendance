@@ -12,10 +12,14 @@
     }
 
     .o_timeoff_card {
+        border-right: none;
         &:not(:last-child) {
             border-bottom: 2px solid $border-color;
-            border-right: none;
         }
+    }
+    .o_accrual_allocation {
+        border-bottom: 2px solid $border-color;
+        border-right: none;
     }
     .o_overtime_card {
         flex-direction: column;

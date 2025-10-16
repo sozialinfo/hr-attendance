@@ -26,7 +26,7 @@ class HrAttendance(models.Model):
     )
 
     @api.model
-    def _read_group_attendance_type_ids(self, stages, domain, order):
+    def _read_group_attendance_type_ids(self, stages, domain):
         return self.env["hr.attendance.type"].search([])
 
     @api.constrains("check_out", "check_in", "break_start_time")

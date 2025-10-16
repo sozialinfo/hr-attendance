@@ -15,39 +15,44 @@
                         <field
                             name="public_employee_id"
                             widget="many2one_avatar"
-                            attrs="{'readonly': [('manual_mode', '!=', True)]}"
-                            groups="hr_attendance.group_hr_attendance_user"
+                            readonly="not manual_mode"
+                            groups="hr_attendance.group_hr_attendance_officer"
                         />
                         <field
                             name="public_employee_id"
                             widget="many2one_avatar"
-                            groups="!hr_attendance.group_hr_attendance_user"
+                            groups="!hr_attendance.group_hr_attendance_officer"
                             domain="[('user_id','=',uid)]"
                             invisible="1"
                         />
                         <field
                             name="next_attendance_type_id"
-                            attrs="{'required': [('check_in_mode', 'in', ['check_in', 'edit_check_in'])], 'readonly': ['|', '&amp;', ('check_in_mode', 'not in', ['edit_check_in']), ('check_in_mode', '=', 'check_in'), ('manual_mode', '=', True), '&amp;', ('check_in_mode', 'not in', ['edit_check_in']), ('manual_mode', '!=', True)], 'invisible': [('check_in_mode', 'not in', ['check_in', 'edit_check_in'])]}"
+                            required="check_in_mode in ('check_in','edit_check_in')"
+                            readonly="(check_in_mode == 'check_in' and not manual_mode) or (check_in_mode != 'edit_check_in' and not manual_mode)"
+                            invisible="check_in_mode not in ('check_in','edit_check_in')"
                             domain="[('absent', '!=', True)]"
                             options="{'no_create': True}"
                         />
                         <field
                             name="start_time"
-                            attrs="{'required': [('check_in_mode', 'in', ['check_in', 'edit_check_in'])], 'readonly': [('check_in_mode', 'not in', ['check_in', 'edit_check_in'])]}"
+                            required="check_in_mode in ('check_in','edit_check_in')"
+                            readonly="check_in_mode not in ('edit_check_in', 'check_in')"
                         />
                         <field
                             name="end_time"
-                            attrs="{'required': [('check_in_mode', 'in', ['check_out'])], 'readonly': [('check_in_mode', 'not in', ['check_out'])], 'invisible': [('check_in_mode', 'not in', ['check_out'])]}"
+                            required="check_in_mode == 'check_out'"
+                            readonly="check_in_mode != 'check_out'"
+                            invisible="check_in_mode != 'check_out'"
                         />
                         <field
                             name="comment"
-                            attrs="{'readonly': [('check_in_mode', 'not in', ['check_in', 'edit_check_in'])]}"
+                            readonly="check_in_mode not in ('edit_check_in', 'check_in')"
                         />
                     </group>
                 </group>
                 <footer>
                     <button
-                        attrs="{'invisible': [('check_in_mode', 'not in', ['edit_check_in'])]}"
+                        invisible="check_in_mode != 'edit_check_in'"
                         string="Edit Check In"
                         name="action_edit"
                         type="object"
@@ -55,7 +60,7 @@
                         class="oe_highlight"
                     />
                     <button
-                        attrs="{'invisible': [('check_in_mode', 'not in', ['check_in'])]}"
+                        invisible="check_in_mode != 'check_in'"
                         string="Check In"
                         name="action_change"
                         type="object"
@@ -63,7 +68,7 @@
                         class="oe_highlight"
                     />
                     <button
-                        attrs="{'invisible': [('check_in_mode', 'not in', ['check_out'])]}"
+                        invisible="check_in_mode != 'check_out'"
                         string="Check Out"
                         name="action_change"
                         type="object"

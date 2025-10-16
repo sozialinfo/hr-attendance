@@ -5,7 +5,6 @@
         <field name="model">hr.employee.public</field>
         <field name="arch" type="xml">
             <kanban
-                class="o_kanban_mobile"
                 js_class="hr_employee_attendance_kanban"
                 sample="1"
                 group_create="0"
@@ -30,107 +29,102 @@
                 <field name="break_start_time" />
                 <progressbar field="attendance_type_id" colors='{}' />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div
-                            t-attf-class="{{record.user_id.raw_value == context.uid ? 'o_hr_kanban_own_employee' : ''}} oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record"
-                        >
+                    <t t-name="card" class="flex-row">
+                        <widget
+                            name="web_ribbon"
+                            title="On Break"
+                            bg_color="bg-primary"
+                            invisible="not break_start_time"
+                        />
+                        <aside class="o_kanban_aside_full">
                             <field
-                                name="image_1024"
-                                class="o_kanban_image_fill_left d-block"
-                                preview_image="image_128"
-                                widget="background_image"
-                                options="{'zoom': true, 'zoom_delay': 1000}"
+                                name="image_128"
+                                class="w-100"
+                                widget="image"
+                                options="{'img_class': 'object-fit-contain w-100 h-100'}"
                             />
+                        </aside>
 
-                            <div
-                                class="ribbon ribbon-top-right"
-                                attrs="{'invisible': [('break_start_time', '=', False)]}"
-                            >
-                                <span class="bg-odoo">On Break</span>
+                        <main class="ps-2 ps-md-0">
+                            <div class="mb-1">
+                                <div
+                                    class="d-flex mb-1 fw-bold fs-5 o_text_overflow justify-content-between"
+                                    t-att-title="record.name.value"
+                                >
+                                    <field name="name" />
+                                </div>
+                                <div
+                                    class="d-flex ps-1"
+                                    t-if="record.attendance_state.raw_value != 'checked_out'"
+                                >
+                                    <i
+                                        class="fa fa-sign-in mt-1 me-1"
+                                        title="Checked In"
+                                    />
+                                    <field name="last_check_in" />
+                                </div>
+                                <div
+                                    class="d-flex ps-1"
+                                    t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value != false"
+                                >
+                                    <i
+                                        class="fa fa-coffee mt-1 me-1"
+                                        title="On Break"
+                                    />
+                                    <field name="break_start_time" />
+                                </div>
+                                <div
+                                    class="d-flex ps-1"
+                                    t-if="record.attendance_state.raw_value != 'checked_out' and record.last_attendance_comment.raw_value"
+                                >
+                                    <i
+                                        class="fa fa-comment mt-1 me-1"
+                                        title="Attendance Note"
+                                    />
+                                    <field name="last_attendance_comment" />
+                                </div>
                             </div>
-                            <div class="oe_kanban_details">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings">
-                                        <strong class="o_kanban_record_title">
-                                            <field
-                                                name="name"
-                                                placeholder="Employee's Name"
-                                            />
-                                        </strong>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_record_body">
-                                    <ul>
-                                        <li
-                                            t-if="record.attendance_state.raw_value != 'checked_out'"
-                                        >
-                                            <i
-                                                class="fa fa-sign-in mt-1 me-1"
-                                                title="Checked In"
-                                            />
-                                            <field name="last_check_in" />
-                                        </li>
-                                        <li
-                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value != false"
-                                        >
-                                            <i
-                                                class="fa fa-coffee mt-1 me-1"
-                                                title="On Break"
-                                            />
-                                            <field name="break_start_time" />
-                                        </li>
-
-                                        <li
-                                            t-if="record.attendance_state.raw_value != 'checked_out'"
-                                            class="o_text_overflow"
-                                        >
-                                            <field name="last_attendance_comment" />
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left" />
-                                    <div class="oe_kanban_bottom_right">
-                                        <button
-                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value == false"
-                                            class="btn o_kanban_pause_button fa fa-pause-circle"
-                                            title="Start Break"
-                                            name="action_break_wizard"
-                                            type="object"
-                                            groups="hr_attendance.group_hr_attendance_user"
-                                        />
-                                        <button
-                                            t-if="record.attendance_state.raw_value == 'checked_in'
+                            <footer class="pt-1 p-0 m-0">
+                                <div class="d-flex ms-auto">
+                                    <button
+                                        t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value == false"
+                                        class="btn o_kanban_pause_button fa fa-pause-circle"
+                                        title="Start Break"
+                                        name="action_break_wizard"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"
+                                    />
+                                    <button
+                                        t-if="record.attendance_state.raw_value == 'checked_in'
                                              and record.break_start_time.raw_value == false
                                              and record.user_id.raw_value == context.uid"
-                                            class="btn o_kanban_pause_button fa fa-pause-circle"
-                                            title="Start Break"
-                                            name="action_break_wizard"
-                                            type="object"
-                                            groups="!hr_attendance.group_hr_attendance_user"
-                                        />
-                                        <button
-                                            t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value != false"
-                                            class="btn o_kanban_play_button fa fa-play-circle"
-                                            title="End Break"
-                                            name="action_break_wizard"
-                                            type="object"
-                                            groups="hr_attendance.group_hr_attendance_user"
-                                        />
-                                        <button
-                                            t-if="record.attendance_state.raw_value == 'checked_in'
+                                        class="btn o_kanban_pause_button fa fa-pause-circle"
+                                        title="Start Break"
+                                        name="action_break_wizard"
+                                        type="object"
+                                        groups="!hr_attendance.group_hr_attendance_officer"
+                                    />
+                                    <button
+                                        t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value != false"
+                                        class="btn o_kanban_play_button fa fa-play-circle"
+                                        title="End Break"
+                                        name="action_break_wizard"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"
+                                    />
+                                    <button
+                                        t-if="record.attendance_state.raw_value == 'checked_in'
                                              and record.break_start_time.raw_value != false
                                              and record.user_id.raw_value == context.uid"
-                                            class="btn o_kanban_play_button fa fa-play-circle"
-                                            title="End Break"
-                                            name="action_break_wizard"
-                                            type="object"
-                                            groups="!hr_attendance.group_hr_attendance_user"
-                                        />
-                                    </div>
+                                        class="btn o_kanban_play_button fa fa-play-circle"
+                                        title="End Break"
+                                        name="action_break_wizard"
+                                        type="object"
+                                        groups="!hr_attendance.group_hr_attendance_officer"
+                                    />
                                 </div>
-                            </div>
-                        </div>
+                            </footer>
+                        </main>
                     </t>
                 </templates>
             </kanban>
@@ -174,7 +168,7 @@
         name="Employees Kanban"
         parent="hr_attendance.menu_hr_attendance_root"
         sequence="0"
-        groups="hr_attendance.group_hr_attendance"
+        groups="hr_attendance.group_hr_attendance_officer,hr_attendance.group_hr_attendance_own_reader"
         action="action_hr_attendance_employee_kanban"
     />
 </odoo>
