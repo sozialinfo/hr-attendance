@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="hr_attendance_kanban_break_form">
+        <field name="name">hr.attendance.kanban.break.form</field>
+        <field name="model">hr.attendance.kanban.break</field>
+        <field name="arch" type="xml">
+            <form string="Start / End Break">
+                <group>
+                    <group colspan="4">
+                        <field name="break_start_time" invisible="1" />
+                        <field name="last_attendance_id" invisible="1" />
+                        <field name="attendance_state" invisible="1" />
+                        <field
+                            name="public_employee_id"
+                            widget="many2one_avatar"
+                            readonly="1"
+                            groups="hr_attendance.group_hr_attendance_officer"
+                        />
+                        <field
+                            name="public_employee_id"
+                            widget="many2one_avatar"
+                            groups="!hr_attendance.group_hr_attendance_officer"
+                            domain="[('user_id','=',uid)]"
+                            invisible="1"
+                        />
+                        <field name="start_time" />
+                        <field
+                            name="end_time"
+                            default_focus="1"
+                            required="break_start_time"
+                            invisible="not break_start_time"
+                        />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        invisible="break_start_time"
+                        string="Start Break"
+                        name="action_start_break"
+                        type="object"
+                        data-hotkey="s"
+                        class="oe_highlight"
+                    />
+                    <button
+                        invisible="not break_start_time"
+                        string="End Break"
+                        name="action_end_break"
+                        type="object"
+                        data-hotkey="s"
+                        class="oe_highlight"
+                    />
+                    <button
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                        data-hotkey="z"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_kanban_break_action" model="ir.actions.act_window">
+        <field name="name">Start / End Break</field>
+        <field name="res_model">hr.attendance.kanban.break</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

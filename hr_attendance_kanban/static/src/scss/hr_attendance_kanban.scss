@@ -1,0 +1,10 @@
+.o_kanban_record > main > footer {
+    .o_kanban_pause_button {
+        font-size: 1.5rem;
+        color: $danger;
+    }
+    .o_kanban_play_button {
+        font-size: 1.5rem;
+        color: $success;
+    }
+}

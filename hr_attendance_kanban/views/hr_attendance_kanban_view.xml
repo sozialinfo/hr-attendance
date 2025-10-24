@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_hr_attendance_employee_kanban" model="ir.ui.view">
+        <field name="name">hr.attendance.employee.kanban</field>
+        <field name="model">hr.employee.public</field>
+        <field name="arch" type="xml">
+            <kanban
+                js_class="hr_employee_attendance_kanban"
+                sample="1"
+                group_create="0"
+                create="0"
+                archivable="0"
+                default_group_by="attendance_type_id"
+                default_order="is_cur_user desc, name asc"
+                action="action_edit_check_in"
+                type="object"
+            >
+                <field name="id" />
+                <field name="user_id" />
+                <field name="user_partner_id" />
+                <field name="is_cur_user" />
+                <field name="image_128" />
+                <field name="attendance_type_id" />
+                <field name="last_attendance_id" />
+                <field name="last_check_in" />
+                <field name="last_check_out" />
+                <field name="last_attendance_comment" />
+                <field name="attendance_state" />
+                <field name="break_start_time" />
+                <progressbar field="attendance_type_id" colors='{}' />
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <widget
+                            name="web_ribbon"
+                            title="On Break"
+                            bg_color="bg-primary"
+                            invisible="not break_start_time"
+                        />
+                        <aside class="o_kanban_aside_full">
+                            <field
+                                name="image_128"
+                                class="w-100"
+                                widget="image"
+                                options="{'img_class': 'object-fit-contain w-100 h-100'}"
+                            />
+                        </aside>
+
+                        <main class="ps-2 ps-md-0">
+                            <div class="mb-1">
+                                <div
+                                    class="d-flex mb-1 fw-bold fs-5 o_text_overflow justify-content-between"
+                                    t-att-title="record.name.value"
+                                >
+                                    <field name="name" />
+                                </div>
+                                <div
+                                    class="d-flex ps-1"
+                                    t-if="record.attendance_state.raw_value != 'checked_out'"
+                                >
+                                    <i
+                                        class="fa fa-sign-in mt-1 me-1"
+                                        title="Checked In"
+                                    />
+                                    <field name="last_check_in" />
+                                </div>
+                                <div
+                                    class="d-flex ps-1"
+                                    t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value != false"
+                                >
+                                    <i
+                                        class="fa fa-coffee mt-1 me-1"
+                                        title="On Break"
+                                    />
+                                    <field name="break_start_time" />
+                                </div>
+                                <div
+                                    class="d-flex ps-1"
+                                    t-if="record.attendance_state.raw_value != 'checked_out' and record.last_attendance_comment.raw_value"
+                                >
+                                    <i
+                                        class="fa fa-comment mt-1 me-1"
+                                        title="Attendance Note"
+                                    />
+                                    <field name="last_attendance_comment" />
+                                </div>
+                            </div>
+                            <footer class="pt-1 p-0 m-0">
+                                <div class="d-flex ms-auto">
+                                    <button
+                                        t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value == false"
+                                        class="btn o_kanban_pause_button fa fa-pause-circle"
+                                        title="Start Break"
+                                        name="action_break_wizard"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"
+                                    />
+                                    <button
+                                        t-if="record.attendance_state.raw_value == 'checked_in'
+                                             and record.break_start_time.raw_value == false
+                                             and record.user_id.raw_value == context.uid"
+                                        class="btn o_kanban_pause_button fa fa-pause-circle"
+                                        title="Start Break"
+                                        name="action_break_wizard"
+                                        type="object"
+                                        groups="!hr_attendance.group_hr_attendance_officer"
+                                    />
+                                    <button
+                                        t-if="record.attendance_state.raw_value == 'checked_in' and record.break_start_time.raw_value != false"
+                                        class="btn o_kanban_play_button fa fa-play-circle"
+                                        title="End Break"
+                                        name="action_break_wizard"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"
+                                    />
+                                    <button
+                                        t-if="record.attendance_state.raw_value == 'checked_in'
+                                             and record.break_start_time.raw_value != false
+                                             and record.user_id.raw_value == context.uid"
+                                        class="btn o_kanban_play_button fa fa-play-circle"
+                                        title="End Break"
+                                        name="action_break_wizard"
+                                        type="object"
+                                        groups="!hr_attendance.group_hr_attendance_officer"
+                                    />
+                                </div>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hr_attendance_employee_search" model="ir.ui.view">
+        <field name="name">hr.attendance.employee.search</field>
+        <field name="mode">primary</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="filter[@name='my_team']" position="before">
+                <filter
+                    name="filter_cur_user"
+                    string="Current User"
+                    domain="[('is_cur_user', '=', True)]"
+                />
+                <separator />
+                <filter
+                    name="filter_on_break"
+                    string="On Break"
+                    domain="[('break_start_time', '!=', False)]"
+                />
+                <separator />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_attendance_employee_kanban" model="ir.actions.act_window">
+        <field name="name">Employees Kanban</field>
+        <field name="res_model">hr.employee.public</field>
+        <field name="view_mode">kanban</field>
+        <field name="domain">[("is_kanban_attendance", "=", True)]</field>
+        <field name="view_id" ref="view_hr_attendance_employee_kanban" />
+        <field name="search_view_id" ref="view_hr_attendance_employee_search" />
+    </record>
+
+    <menuitem
+        id="menu_hr_attendance_employee_kanban"
+        name="Employees Kanban"
+        parent="hr_attendance.menu_hr_attendance_root"
+        sequence="0"
+        groups="hr_attendance.group_hr_attendance_officer,hr_attendance.group_hr_attendance_own_reader"
+        action="action_hr_attendance_employee_kanban"
+    />
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="hr_attendance_type_absent" model="hr.attendance.type">
+        <field name="name">👋 Absent</field>
+        <field name="absent">True</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="hr_attendance_type_office" model="hr.attendance.type">
+        <field name="name">🏢 Office</field>
+        <field name="absent">False</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="hr_attendance_type_homeoffice" model="hr.attendance.type">
+        <field name="name">🏠 Home-Office</field>
+        <field name="absent">False</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="hr_attendance_type_travelling" model="hr.attendance.type">
+        <field name="name">🚋 Travelling</field>
+        <field name="absent">False</field>
+        <field name="sequence">4</field>
+    </record>
+</odoo>

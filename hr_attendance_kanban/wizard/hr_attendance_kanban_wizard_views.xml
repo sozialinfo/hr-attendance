@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="hr_attendance_kanban_wizard_form">
+        <field name="name">hr.attendance.kanban.wizard.form</field>
+        <field name="model">hr.attendance.kanban.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Check In / Check Out">
+                <group>
+                    <group colspan="4">
+                        <field name="break_start_time" invisible="1" />
+                        <field name="manual_mode" invisible="1" />
+                        <field name="edit_check_in" invisible="1" />
+                        <field name="check_in_mode" invisible="1" />
+                        <field name="attendance_state" invisible="1" />
+                        <field
+                            name="public_employee_id"
+                            widget="many2one_avatar"
+                            readonly="not manual_mode"
+                            groups="hr_attendance.group_hr_attendance_officer"
+                        />
+                        <field
+                            name="public_employee_id"
+                            widget="many2one_avatar"
+                            groups="!hr_attendance.group_hr_attendance_officer"
+                            domain="[('user_id','=',uid)]"
+                            invisible="1"
+                        />
+                        <field
+                            name="next_attendance_type_id"
+                            required="check_in_mode in ('check_in','edit_check_in')"
+                            readonly="(check_in_mode == 'check_in' and not manual_mode) or (check_in_mode != 'edit_check_in' and not manual_mode)"
+                            invisible="check_in_mode not in ('check_in','edit_check_in')"
+                            domain="[('absent', '!=', True)]"
+                            options="{'no_create': True}"
+                        />
+                        <field
+                            name="start_time"
+                            required="check_in_mode in ('check_in','edit_check_in')"
+                            readonly="check_in_mode not in ('edit_check_in', 'check_in')"
+                        />
+                        <field
+                            name="end_time"
+                            required="check_in_mode == 'check_out'"
+                            readonly="check_in_mode != 'check_out'"
+                            invisible="check_in_mode != 'check_out'"
+                        />
+                        <field
+                            name="comment"
+                            readonly="check_in_mode not in ('edit_check_in', 'check_in')"
+                        />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        invisible="check_in_mode != 'edit_check_in'"
+                        string="Edit Check In"
+                        name="action_edit"
+                        type="object"
+                        data-hotkey="s"
+                        class="oe_highlight"
+                    />
+                    <button
+                        invisible="check_in_mode != 'check_in'"
+                        string="Check In"
+                        name="action_change"
+                        type="object"
+                        data-hotkey="s"
+                        class="oe_highlight"
+                    />
+                    <button
+                        invisible="check_in_mode != 'check_out'"
+                        string="Check Out"
+                        name="action_change"
+                        type="object"
+                        data-hotkey="s"
+                        class="oe_highlight"
+                    />
+                    <button
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                        data-hotkey="z"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_kanban_wizard_action" model="ir.actions.act_window">
+        <field name="name">Check In / Check Out</field>
+        <field name="res_model">hr.attendance.kanban.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

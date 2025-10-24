@@ -1,0 +1,3 @@
+- [Sozialinfo](https://sozialinfo.ch):
+  - David Brühlmeier \<<david.bruehlmeier@sozialinfo.ch>\>
+- Miika Nissi \<<miika@miikanissi.com>\>
