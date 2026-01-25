@@ -24,6 +24,11 @@ class HrEmployeePublic(models.Model):
         readonly=True,
         groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
+    attendance_state = fields.Selection(
+        related="employee_id.attendance_state",
+        readonly=True,
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
+    )
     last_check_in = fields.Datetime(
         related="employee_id.last_check_in",
         readonly=True,
