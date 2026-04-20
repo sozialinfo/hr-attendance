@@ -55,6 +55,12 @@ class HrEmployeePublic(models.Model):
         readonly=True,
         groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
     )
+    total_overtime = fields.Float(
+        related="employee_id.total_overtime",
+        string="Total Overtime",
+        readonly=True,
+        groups="hr_attendance.group_hr_attendance_own_reader,hr_attendance.group_hr_attendance_officer",
+    )
 
     @api.depends("employee_id.attendance_type_id")
     def _compute_attendance_type_id(self):
