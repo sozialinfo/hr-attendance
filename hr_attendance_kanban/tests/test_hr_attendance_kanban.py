@@ -185,7 +185,11 @@ class TestHrAttendanceKanban(TransactionCase):
         """Test employee user can start and end a break in attendance kanban"""
         public_employee = self.env["hr.employee.public"].browse(self.employee.ids)
 
-        check_in_time = datetime.now()
+        # Use a past check_in_time so that all attendance records (including the
+        # new one created when ending a break) have a check_in in the past.
+        # Odoo 18's _compute_last_attendance_id filters by check_in <= now(),
+        # so future check_in times would be excluded from last_attendance_id.
+        check_in_time = datetime.now() - timedelta(hours=9)
 
         # Check in
         self.env["hr.attendance.kanban.wizard"].create(
