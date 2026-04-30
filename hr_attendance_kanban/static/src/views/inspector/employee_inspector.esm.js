@@ -3,13 +3,20 @@ import {onWillStart, onWillUpdateProps, useState} from "@odoo/owl";
 
 export class EmployeeInspector extends TimeOffDashboard {
     static template = "hr_attendance_kanban.EmployeeInspector";
+    static props = {
+        "*": true,
+        loadCount: {type: Number, optional: true},
+    };
 
     setup() {
         super.setup();
-        this.overtimeState = useState({totalOvertime: 0});
+        this.overtimeState = useState({totalOvertime: 0, isCheckedIn: false});
         onWillStart(() => this._loadOvertime(this.props.employeeId));
         onWillUpdateProps((nextProps) => {
-            if (nextProps.employeeId !== this.props.employeeId) {
+            if (
+                nextProps.employeeId !== this.props.employeeId ||
+                nextProps.loadCount !== this.props.loadCount
+            ) {
                 return this._loadOvertime(nextProps.employeeId);
             }
         });
@@ -17,15 +24,25 @@ export class EmployeeInspector extends TimeOffDashboard {
 
     async _loadOvertime(employeeId) {
         if (!employeeId) return;
-        const employees = await this.orm.searchRead(
-            "hr.employee.public",
-            [["id", "=", employeeId]],
-            ["total_overtime"],
-            {limit: 1}
+        const [records, employees] = await Promise.all([
+            this.orm.searchRead(
+                "hr.attendance.overtime",
+                [["employee_id", "=", employeeId]],
+                ["duration"]
+            ),
+            this.orm.searchRead(
+                "hr.employee.public",
+                [["id", "=", employeeId]],
+                ["attendance_state"],
+                {limit: 1}
+            ),
+        ]);
+        this.overtimeState.totalOvertime = records.reduce(
+            (sum, r) => sum + (r.duration || 0),
+            0
         );
-        if (employees.length) {
-            this.overtimeState.totalOvertime = employees[0].total_overtime || 0;
-        }
+        this.overtimeState.isCheckedIn =
+            employees[0]?.attendance_state === "checked_in";
     }
 
     formatFloatTime(value) {

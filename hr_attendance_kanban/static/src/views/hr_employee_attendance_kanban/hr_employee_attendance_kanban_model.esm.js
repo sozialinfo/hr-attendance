@@ -5,7 +5,7 @@ import {launchCheckInWizard} from "@hr_attendance_kanban/views/launch_check_in_w
 export class HrEmployeeAttendanceKanbanModel extends RelationalModel {
     setup() {
         super.setup(...arguments);
-        this.state = useState({employeeId: null});
+        this.state = useState({employeeId: null, loadCount: 0});
         onWillStart(async () => {
             const employeeId = await this.orm.call(
                 "hr.employee",
@@ -18,9 +18,17 @@ export class HrEmployeeAttendanceKanbanModel extends RelationalModel {
     get employeeId() {
         return this.state.employeeId;
     }
+    get loadCount() {
+        return this.state.loadCount;
+    }
 }
 
 export class HrEmployeeAttendanceKanbanDynamicGroupList extends RelationalModel.DynamicGroupList {
+    async load(params) {
+        await super.load(params);
+        this.model.state.loadCount++;
+    }
+
     async handleAttendanceChange(record, targetValue) {
         // Check if we need to launch check in/out wizard depending on employee's
         // current attendance state and target attendance type

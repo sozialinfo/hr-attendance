@@ -13,6 +13,7 @@ export class HrEmployeeAttendanceKanbanRenderer extends KanbanRenderer {
         const {model} = this.props.list;
         return {
             employeeId: model.employeeId,
+            loadCount: model.loadCount,
         };
     }
 }
