@@ -11,10 +11,10 @@
                     <div class="text-uppercase">hours</div>
                     <div class="o_overtime_validity text-uppercase">
                         (<span>
-                            <t t-if="overtimeState.isCheckedIn">until yesterday</t>
-                            <t t-else="">until today</t>
-                        </span>)                        
-                        
+                        <t t-if="overtimeState.isCheckedIn">until yesterday</t>
+                        <t t-else="">until today</t>
+                    </span>)
+
                     </div>
                 </div>
                 <t t-foreach="state.holidays" t-as="holiday" t-key="holiday[3]">
