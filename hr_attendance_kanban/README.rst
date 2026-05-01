@@ -34,10 +34,10 @@ avatar on a kanban board.
 The kanban board also shows a quick overview of all employees, grouped
 by attendance type, such as:
 
--  👋 Absent
--  🏢 Office
--  🏠 Home-Office
--  🚋 Travelling
+- 👋 Absent
+- 🏢 Office
+- 🏠 Home-Office
+- 🚋 Travelling
 
 On the right side of the kanban board, you can see certain key figures
 for the employee such as overtime hours and remaining vacation time.
@@ -95,11 +95,11 @@ Authors
 Contributors
 ------------
 
--  `Sozialinfo <https://sozialinfo.ch>`__:
+- `Sozialinfo <https://sozialinfo.ch>`__:
 
-   -  David Brühlmeier <david.bruehlmeier@sozialinfo.ch>
+  - David Brühlmeier <david.bruehlmeier@sozialinfo.ch>
 
--  Miika Nissi <miika@miikanissi.com>
+- Miika Nissi <miika@miikanissi.com>
 
 Maintainers
 -----------

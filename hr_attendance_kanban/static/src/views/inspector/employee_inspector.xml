@@ -3,6 +3,20 @@
     <t t-name="hr_attendance_kanban.EmployeeInspector" owl="1">
         <div class="o_employee_inspector h-100" t-if="props.employeeId">
             <div class="o_employee_inspector_info">
+                <div class="o_overtime_card py-3 text-primary">
+                    <strong class="o_overtime_name">Extra Hours</strong>
+                    <span class="o_overtime_duration">
+                        <t t-esc="formatFloatTime(overtimeState.totalOvertime)" />
+                    </span>
+                    <div class="text-uppercase">hours</div>
+                    <div class="o_overtime_validity text-uppercase">
+                        (<span>
+                        <t t-if="overtimeState.isCheckedIn">until yesterday</t>
+                        <t t-else="">until today</t>
+                    </span>)
+
+                    </div>
+                </div>
                 <t t-foreach="state.holidays" t-as="holiday" t-key="holiday[3]">
                     <TimeOffCard
                         name="holiday[0]"

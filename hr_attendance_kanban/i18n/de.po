@@ -368,7 +368,7 @@ msgstr ""
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_search
 msgid "On Break"
-msgstr ""
+msgstr "Pause"
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -442,6 +442,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_type__name
 msgid "Type"
 msgstr "Abwesenheitsart"
+
+#. module: hr_attendance_kanban
+#. odoo-javascript
+#: code:addons/hr_attendance_kanban/static/src/views/inspector/employee_inspector.xml:0
+#, python-format
+msgid "Extra Hours"
+msgstr "Gleitzeitsaldo"
+
+#. module: hr_attendance_kanban
+#. odoo-javascript
+#: code:addons/hr_attendance_kanban/static/src/views/inspector/employee_inspector.xml:0
+#, python-format
+msgid "until today"
+msgstr "bis heute"
+
+#. module: hr_attendance_kanban
+#. odoo-javascript
+#: code:addons/hr_attendance_kanban/static/src/views/inspector/employee_inspector.xml:0
+#, python-format
+msgid "until yesterday"
+msgstr "bis gestern"
 
 #. module: hr_attendance_kanban
 #. odoo-python
