@@ -34,6 +34,7 @@ msgstr ""
 
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_search
 msgid "On Break"
 msgstr "Pause"
 
@@ -364,11 +365,6 @@ msgstr "Zuletzt geändert am"
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_wizard__manual_mode
 msgid "Manual Mode"
 msgstr ""
-
-#. module: hr_attendance_kanban
-#: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_search
-msgid "On Break"
-msgstr "Pause"
 
 #. module: hr_attendance_kanban
 #. odoo-python
