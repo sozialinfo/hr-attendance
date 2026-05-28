@@ -25,7 +25,7 @@ msgstr ""
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
 msgid "<i class=\"fa fa-coffee mt-1 me-1\" title=\"On Break\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-coffee mt-1 me-1\" title=\"Pause\"/>"
 
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
@@ -34,8 +34,8 @@ msgstr ""
 
 #. module: hr_attendance_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance_kanban.view_hr_attendance_employee_kanban
-msgid "<span class=\"bg-odoo\">On Break</span>"
-msgstr ""
+msgid "On Break"
+msgstr "Pause"
 
 #. module: hr_attendance_kanban
 #. odoo-python
@@ -164,7 +164,7 @@ msgstr "Kommentar"
 #. module: hr_attendance_kanban
 #: model:ir.ui.menu,name:hr_attendance_kanban.hr_attendance_settings_redefinition_menu
 msgid "Configuration"
-msgstr "Konfiuguration"
+msgstr "Konfiguration"
 
 #. module: hr_attendance_kanban
 #: model:ir.model.fields,field_description:hr_attendance_kanban.field_hr_attendance_kanban_break__create_uid
